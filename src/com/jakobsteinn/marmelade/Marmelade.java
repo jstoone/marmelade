@@ -1,5 +1,6 @@
 package com.jakobsteinn.marmelade;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -344,6 +345,46 @@ public class Marmelade {
             glColor4f(1, 1, 1, 1);
         }
         glEndList();
+        
+        int bunnyObjectList = glGenLists(1);
+        glNewList(bunnyObjectList, GL_COMPILE);
+        {
+        	Model m = null;
+        	try {
+				m = ObjLoader.loadModel(new File("res/bunny.obj"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				Display.destroy();
+				System.exit(1);
+			} catch (IOException e){
+				e.printStackTrace();
+				Display.destroy();
+				System.exit(1);
+			}
+        	
+        	glBegin(GL_TRIANGLES);
+        	for(Face faces : m.faces){
+        		Vector3f n1 = m.normals.get((int) faces.normals.x -1);
+        		glNormal3f(n1.x, n1.y, n1.z);
+        		Vector3f v1 = m.vertices.get((int) faces.vertex.x -1);
+        		glVertex3f(v1.x, v1.y, v1.z);
+        		
+        		Vector3f n2 = m.normals.get((int) faces.normals.y -1);
+        		glNormal3f(n2.x, n2.y, n2.z);
+        		Vector3f v2 = m.vertices.get((int) faces.vertex.y -1);
+        		glVertex3f(v2.x, v2.y, v2.z);
+        		
+        		Vector3f n3 = m.normals.get((int) faces.normals.z -1);
+        		glNormal3f(n3.x, n3.y, n3.z);
+        		Vector3f v3 = m.vertices.get((int) faces.vertex.z -1);
+        		glVertex3f(v3.x, v3.y, v3.z);
+        	}
+        	glEnd();
+        	
+        	
+        }
+        
+        
 
         getDelta();
         lastFPS = getTime();
@@ -363,6 +404,7 @@ public class Marmelade {
             glDisable(GL_CULL_FACE);
             glBindTexture(GL_TEXTURE_2D, 0);
             glCallList(objectDisplayList);
+            glCallList(bunnyObjectList);
 
             glLoadIdentity();
             glRotatef(rotation.x, 1, 0, 0);
