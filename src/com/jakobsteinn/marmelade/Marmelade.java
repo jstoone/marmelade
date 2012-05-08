@@ -287,16 +287,16 @@ public class Marmelade {
 
         int floorDisplayList = glGenLists(1);
         glNewList(floorDisplayList, GL_COMPILE);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0, 0);
-        glVertex3f(-gridSize, floorHeight, -gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(-gridSize, floorHeight, gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(gridSize, floorHeight, gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(gridSize, floorHeight, -gridSize);
-        glEnd();
+	        glBegin(GL_QUADS);
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, floorHeight, gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, floorHeight, gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(gridSize, floorHeight, -gridSize);
+	        glEnd();
         glEndList();
 
         int objectDisplayList = glGenLists(1);
@@ -351,7 +351,7 @@ public class Marmelade {
         {
         	Model m = null;
         	try {
-				m = ObjLoader.loadModel(new File("res/bunny.obj"));
+				m = ObjLoader.loadModel(new File("src/com/jakobsteinn/marmelade/bunny.obj"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				Display.destroy();
@@ -380,9 +380,9 @@ public class Marmelade {
         		glVertex3f(v3.x, v3.y, v3.z);
         	}
         	glEnd();
-        	
-        	
+        	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
+        glEndList();
         
         
 
@@ -404,6 +404,7 @@ public class Marmelade {
             glDisable(GL_CULL_FACE);
             glBindTexture(GL_TEXTURE_2D, 0);
             glCallList(objectDisplayList);
+            
             glCallList(bunnyObjectList);
 
             glLoadIdentity();
@@ -639,6 +640,7 @@ public class Marmelade {
         glDeleteLists(ceilingDisplayList, 1);
         glDeleteLists(wallDisplayList, 1);
         glDeleteLists(objectDisplayList, 1);
+        glDeleteLists(bunnyObjectList, 1);
         Display.destroy();
         System.exit(0);
     }

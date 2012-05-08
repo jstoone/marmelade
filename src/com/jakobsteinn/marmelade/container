@@ -1,0 +1,17 @@
+glBindTexture(GL_TEXTURE_2D, floorTexture);
+
+            glEnable(GL_CULL_FACE);
+            glDisable(GL_DEPTH_TEST);
+            glCallList(floorDisplayList);
+            glCallList(ceilingDisplayList);
+            glCallList(wallDisplayList);
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glCallList(objectDisplayList);
+            
+            glDeleteTextures(floorTexture);
+        glDeleteLists(floorDisplayList, 1);
+        glDeleteLists(ceilingDisplayList, 1);
+        glDeleteLists(wallDisplayList, 1);
+        glDeleteLists(objectDisplayList, 1);
