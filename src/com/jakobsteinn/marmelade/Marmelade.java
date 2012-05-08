@@ -44,7 +44,7 @@ public class Marmelade {
     public static volatile boolean running = true;
     
     //The position of the player as a 3D vector (xyz).
-    public static Vector3f position = new Vector3f(0, 0, 0);
+    public static Vector3f position = new Vector3f(0, 0, -5.0f);
 /**
 	* The rotation of the axis (where to the player looks). The X component
 	* stands for the rotation along the x-axis, where 0 is dead ahead, 180 is
@@ -362,6 +362,7 @@ public class Marmelade {
 				System.exit(1);
 			}
         	
+        	glTranslatef(0.0f, 0.8f, 0.0f);
         	glBegin(GL_TRIANGLES);
         	for(Face faces : m.faces){
         		Vector3f n1 = m.normals.get((int) faces.normals.x -1);
@@ -395,17 +396,25 @@ public class Marmelade {
             int delta = getDelta();
             glBindTexture(GL_TEXTURE_2D, floorTexture);
 
+            glShadeModel(GL_SMOOTH);
             glEnable(GL_CULL_FACE);
             glDisable(GL_DEPTH_TEST);
             glCallList(floorDisplayList);
             glCallList(ceilingDisplayList);
             glCallList(wallDisplayList);
+            glCallList(objectDisplayList);
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHT0);
+            glLightModel(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{0.5f, 0.5f, 0.5f, 1.0f}));
+            glLight(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{0.1f, 0.1f, 0.1f, 1.0f}));
+            glCullFace(GL_BACK);
+            glEnable(GL_COLOR_MATERIAL);
+            glColorMaterial(GL_FRONT, GL_DIFFUSE);
+            glCallList(bunnyObjectList);
             glDisable(GL_CULL_FACE);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glCallList(objectDisplayList);
             
-            glCallList(bunnyObjectList);
 
             glLoadIdentity();
             glRotatef(rotation.x, 1, 0, 0);
@@ -644,4 +653,14 @@ public class Marmelade {
         Display.destroy();
         System.exit(0);
     }
+    
+    private static FloatBuffer asFloatBuffer(float[] value){
+    	FloatBuffer buffer = BufferUtils.createFloatBuffer(value.length);
+    	buffer.put(value);
+    	buffer.flip();
+    	return buffer;
+    }
+    
+    
+    
 }
