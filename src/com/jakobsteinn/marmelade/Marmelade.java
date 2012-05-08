@@ -303,44 +303,44 @@ public class Marmelade {
         {
             double topPoint = 0.75;
             glBegin(GL_TRIANGLES);
-            glColor4f(1, 1, 0, 1f);
-            glVertex3d(0, topPoint, -5);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(-1, -0.75, -4);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(1, -.75, -4);
-
-            glColor4f(1, 1, 0, 1f);
-            glVertex3d(0, topPoint, -5);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(1, -0.75, -4);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(1, -0.75, -6);
-
-            glColor4f(1, 1, 0, 1f);
-            glVertex3d(0, topPoint, -5);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(1, -0.75, -6);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(-1, -.75, -6);
-            
-            glColor4f(1, 1, 0, 1f);
-            glVertex3d(0, topPoint, -5);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(-1, -0.75, -6);
-            glColor4f(0, 0, 1, 1f);
-            glVertex3d(-1, -.75, -4);
-            
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -0.75, -4);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -.75, -4);
+	
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -4);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -6);
+	
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -6);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -.75, -6);
+	            
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -0.75, -6);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -.75, -4);
             glEnd();
-            // Here below if the dull old triangle, if you so desire.
-// glBegin(GL_TRIANGLES);
-// glColor4f(1, 0, 0, 0.9f);
-// glVertex3f(-0.75f, -0.75f, -5);
-// glColor4f(0, 1, 0, 0.9f);
-// glVertex3f(0.75f, -0.75f, -5);
-// glColor4f(0, 0, 1, 0.9f);
-// glVertex3f(0.75f, 0.75f, -5.5f);
-// glEnd();
+            
+//			//Here below if the dull old triangle, if you so desire.
+//			glBegin(GL_TRIANGLES);
+//				glColor4f(1, 0, 0, 0.9f);
+//				glVertex3f(-0.75f, -0.75f, -5);
+//				glColor4f(0, 1, 0, 0.9f);
+//				glVertex3f(0.75f, -0.75f, -5);
+//				glColor4f(0, 0, 1, 0.9f);
+//				glVertex3f(0.75f, 0.75f, -5.5f);
+//			glEnd();
             glColor4f(1, 1, 1, 1);
         }
         glEndList();
