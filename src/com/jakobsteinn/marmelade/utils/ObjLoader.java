@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade;
+package com.jakobsteinn.marmelade.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

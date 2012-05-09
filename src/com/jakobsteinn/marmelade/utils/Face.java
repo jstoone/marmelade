@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade;
+package com.jakobsteinn.marmelade.utils;
 
 import org.lwjgl.util.vector.Vector3f;
 

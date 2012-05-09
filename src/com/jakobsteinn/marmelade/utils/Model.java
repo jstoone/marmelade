@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade;
+package com.jakobsteinn.marmelade.utils;
 
 import java.util.ArrayList;
 import java.util.List;

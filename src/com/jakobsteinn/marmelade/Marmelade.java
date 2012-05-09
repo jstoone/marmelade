@@ -25,6 +25,10 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 
+import com.jakobsteinn.marmelade.utils.Face;
+import com.jakobsteinn.marmelade.utils.Model;
+import com.jakobsteinn.marmelade.utils.ObjLoader;
+
 /**
 * A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
 * forward; A/LEFT = strafe left; D/RIGHT = strafe right; S/DOWN = backward;
@@ -35,79 +39,132 @@ import org.newdawn.slick.Color;
 * @author Oskar Veerhoek, Yan Chernikov
 */
 public class Marmelade {
-
-    //Defines if the application is resizable.
-    public static final boolean resizable = true;
-    
-	// defines if the application is running. Set to false to terminate the
-	// program.
-    public static volatile boolean running = true;
-    
-    //The position of the player as a 3D vector (xyz).
-    public static Vector3f position = new Vector3f(0, 0, -5.0f);
-/**
-	* The rotation of the axis (where to the player looks). The X component
-	* stands for the rotation along the x-axis, where 0 is dead ahead, 180 is
-	* backwards, and 360 is automically set to 0 (dead ahead). The value must
-	* be between (including) 0 and 360. The Y component stands for the rotation
-	* along the y-axis, where 0 is looking straight ahead, -90 is straight up,
-	* and 90 is straight down. The value must be between (including) -90 and
-	* 90. */
-    public static Vector3f rotation = new Vector3f(0, 0, 0);
-    
-    //The minimal distance from the camera where objects are rendered.
-    public static float zNear = 0.001f;
-    
-	//The width and length of the floor and ceiling. Don't put anything above
-	//1000, or OpenGL will start to freak out, though.
-    public static final int gridSize = 10;
-    
-	//The size of tiles, where 0.5 is the standard size. Increasing the size by
-	//results in smaller tiles, and vice versa.
-    public static final float tileSize = 0.20f;
-    
-    //The maximal distance from the camera where objects are rendered.
-    public static float zFar = 20f;
-    
-    //The distance where fog starts appearing.
-    public static float fogNear = 9f;
-    
-    //The distance where the fog stops appearing (fully black here)
-    public static float fogFar = 13f;
-    
-    //The color of the fog in rgba.
-    public static Color fogColor = new Color(0.5f, 0f, 0.5f, 5.0f);
-    
-    //Defines if the application utilizes full-screen.
-    public static final boolean fullscreen = false;
-    
-    //Defines the walking speed, where 10 is the standard.
-    public static int walkingSpeed = 10;
-    
-    //Defines the mouse speed.
-    public static int mouseSpeed = 2;
-    
-    //Defines if the application utilizes vertical synchronization (eliminates
-    //screen tearing; caps fps to 60fps)
-    public static final boolean vsync = true;
-    
-    //Defines if the applications prints its frames-per-second to the console.
-    public static boolean printFPS = false;
-    
-    //Defines the maximum angle at which the player can look up.
-    public static final int maxLookUp = 85;
-    
-    //Defines the minimum angle at which the player can look down.
-    public static final int maxLookDown = -85;
-    
-    //The height of the ceiling.
-    public static final float ceilingHeight = 10;
-    
-    //The height of the floor.
-    public static final float floorHeight = -1;
-    
-    //Defines the field of view.
-    public static int fov = 68;
+	
+	/* 
+	 * ***********************************************
+	 * ******          APPLICATION             *******
+	 * ***********************************************
+	 */
+		// defines if the application is running. Set to false to terminate the
+		// program.
+		//DEFAULT: true
+		public static volatile boolean running = true;
+		
+		//Defines if the application is resizable.
+		//DEFAULT: true
+		public static final boolean resizable = true;
+		
+		//Defines if the application utilizes full-screen.
+		//DEFAULT: false
+		public static final boolean fullscreen = false;
+		
+		//Defines if the application utilizes vertical synchronization (eliminates
+		//screen tearing; caps fps to 60fps)
+		//DEFAULT: true
+		public static final boolean vsync = true;
+		
+		//Defines if the applications prints its frames-per-second to the console.
+		//DEFAULT: false
+		public static boolean printFPS = false;
+	
+	/* 
+	 * ***********************************************
+	 * ******             PLAYER               *******
+	 * ***********************************************
+	 */
+		//The position of the player as a 3D vector (xyz).
+		//DEFAULT: new Vector3f(0.0f, 0.0f, -5.0f);
+		public static Vector3f position = new Vector3f(0, 0, -5.0f);
+		
+		//Defines the walking speed, where 10 is the standard.
+		//DEFAULT: 10
+		public static int walkingSpeed = 10;
+		
+		//Defines the mouse speed.
+		//DEFAULT: -2
+		public static int mouseSpeed = 2;
+		
+		// The rotation of the axis (where to the player looks). The X component
+		// stands for the rotation along the x-axis, where 0 is dead ahead, 180 is
+		// backwards, and 360 is automically set to 0 (dead ahead). The value must
+		// be between (including) 0 and 360. The Y component stands for the rotation
+		// along the y-axis, where 0 is looking straight ahead, -90 is straight up,
+		// and 90 is straight down. The value must be between (including) -90 and
+		// 90.
+		//DEFAULT: new Vector3f(0.0f, 0.0f, 0.0f);
+		public static Vector3f rotation = new Vector3f(0.0f, 0.0f, 0.0f);
+		
+		//Defines the maximum angle at which the player can look up.
+		//DEFAULT: 85
+		public static final int maxLookUp = 85;
+		
+		//Defines the minimum angle at which the player can look down.
+		// DEFAULT: -85
+		public static final int maxLookDown = -85;
+	    
+		
+	/* 
+	 * ***********************************************
+	 * ******             CAMERA               *******
+	 * ***********************************************
+	 */   
+		//The minimal distance from the camera where objects are rendered.
+		//DEFAULT: 0.001f
+		public static float zNear = 0.001f;
+		  
+		//The maximal distance from the camera where objects are rendered.
+		//DEFAULT: 20f
+		public static float zFar = 20f;
+		
+		//Defines the field of view.
+		//DEFAULT: 68
+	    public static int fov = 68;
+	
+	/* 
+	 * ***********************************************
+	 * ******               BOX                *******
+	 * ***********************************************
+	 */
+		//The width and length of the floor and ceiling. Don't put anything above
+		//1000, or OpenGL will start to freak out, though.
+		// floor area, watch out for the walls, the pic's get tiny
+		//DEFAULT: 10;
+		public static final int gridSize = 50;
+		
+		//The size of tiles, where 0.5 is the standard size. Increasing the size by
+		//results in smaller tiles, and vice versa.
+		//DEFAULT: 0.20f
+		public static final float tileSize = 0.20f;
+	  
+		//The height of the ceiling.
+		//DEFAULT: 10
+		public static final float ceilingHeight = 10f;
+		
+		//The height of the floor.
+		//DEFAULT: -1:
+		public static final float floorHeight = -1;
+		  
+	/* 
+	 * ***********************************************
+	 * ******               FOG                *******
+	 * ***********************************************
+	 */
+		//The distance where fog starts appearing.
+		//DEFAULT: 9f
+		public static float fogNear = 9f;
+				
+		//The distance where the fog stops appearing (fully black here)
+		//DEFAULT: 13f
+		public static float fogFar = 13f;
+				
+		//The color ofthe fog in rgba.
+		//DEFAULT: new Color(0.5f, 0.0f, 0.5f, 5f); <- pink
+		public static Color fogColor = new Color(0.5f, 0f, 0.5f, 5.0f);
+		
+	/*
+	 *  END OF CONFIG
+	 */
+	
     private static int fps;
     private static long lastFPS;
     private static long lastFrame;
@@ -135,20 +192,7 @@ public class Marmelade {
     }
 
     public static void main(String[] args) {
-        try {
-            if (fullscreen) {
-                Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
-            } else {
-                Display.setResizable(resizable);
-                Display.setDisplayMode(new DisplayMode(800, 600));
-            }
-            Display.setTitle("Minefront Pre-Alpha 0.02 LWJGL Port");
-            Display.setVSyncEnabled(vsync);
-            Display.create();
-        } catch (LWJGLException ex) {
-            System.err.println("Display initialization failed.");
-            System.exit(1);
-        }
+        initDisplay();
 
         if (fullscreen) {
             Mouse.setGrabbed(true);
@@ -300,51 +344,7 @@ public class Marmelade {
         glEndList();
 
         int objectDisplayList = glGenLists(1);
-        glNewList(objectDisplayList, GL_COMPILE);
-        {
-            double topPoint = 0.75;
-            glBegin(GL_TRIANGLES);
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -0.75, -4);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -.75, -4);
-	
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -4);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -6);
-	
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -6);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -.75, -6);
-	            
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -0.75, -6);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -.75, -4);
-            glEnd();
-            
-//			//Here below if the dull old triangle, if you so desire.
-//			glBegin(GL_TRIANGLES);
-//				glColor4f(1, 0, 0, 0.9f);
-//				glVertex3f(-0.75f, -0.75f, -5);
-//				glColor4f(0, 1, 0, 0.9f);
-//				glVertex3f(0.75f, -0.75f, -5);
-//				glColor4f(0, 0, 1, 0.9f);
-//				glVertex3f(0.75f, 0.75f, -5.5f);
-//			glEnd();
-            glColor4f(1, 1, 1, 1);
-        }
-        glEndList();
+        drawPyramid(objectDisplayList);
         
         int bunnyObjectList = glGenLists(1);
         glNewList(bunnyObjectList, GL_COMPILE);
@@ -421,25 +421,6 @@ public class Marmelade {
             glRotatef(rotation.y, 0, 1, 0);
             glRotatef(rotation.z, 0, 0, 1);
             glTranslatef(position.x, position.y, position.z);
-
-            if (Mouse.isGrabbed()) {
-                float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
-                float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
-                if (rotation.y + mouseDX >= 360) {
-                    rotation.y = rotation.y + mouseDX - 360;
-                } else if (rotation.y + mouseDX < 0) {
-                    rotation.y = 360 - rotation.y + mouseDX;
-                } else {
-                    rotation.y += mouseDX;
-                }
-                if (rotation.x - mouseDY >= maxLookDown && rotation.x - mouseDY <= maxLookUp) {
-                    rotation.x += -mouseDY;
-                } else if (rotation.x - mouseDY < maxLookDown) {
-                    rotation.x = maxLookDown;
-                } else if (rotation.x - mouseDY > maxLookUp) {
-                    rotation.x = maxLookUp;
-                }
-            }
 
             boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP) || Keyboard.isKeyDown(Keyboard.KEY_W);
             boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_S);
@@ -623,6 +604,27 @@ public class Marmelade {
                     }
                 }
             }
+            
+            if (Mouse.isGrabbed()) {
+                float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
+                float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
+                if (rotation.y + mouseDX >= 360) {
+                    rotation.y = rotation.y + mouseDX - 360;
+                } else if (rotation.y + mouseDX < 0) {
+                    rotation.y = 360 - rotation.y + mouseDX;
+                } else {
+                    rotation.y += mouseDX;
+                }
+                if (rotation.x - mouseDY >= maxLookDown && rotation.x - mouseDY <= maxLookUp) {
+                    rotation.x += -mouseDY;
+                } else if (rotation.x - mouseDY < maxLookDown) {
+                    rotation.x = maxLookDown;
+                } else if (rotation.x - mouseDY > maxLookUp) {
+                    rotation.x = maxLookUp;
+                }
+            }
+            
+            
             if (resizable) {
                 if (Display.wasResized()) {
                     glViewport(0, 0, Display.getWidth(), Display.getHeight());
@@ -654,7 +656,63 @@ public class Marmelade {
         System.exit(0);
     }
     
-    private static FloatBuffer asFloatBuffer(float[] value){
+    private static void initDisplay() {
+    	try {
+            if (fullscreen) {
+                Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+            } else {
+                Display.setResizable(resizable);
+                Display.setDisplayMode(new DisplayMode(800, 600));
+            }
+            Display.setTitle("Minefront Pre-Alpha 0.02 LWJGL Port");
+            Display.setVSyncEnabled(vsync);
+            Display.create();
+        } catch (LWJGLException ex) {
+            System.err.println("Display initialization failed.");
+            System.exit(1);
+        }
+	}
+
+	private static void drawPyramid(int objectDisplayList) {
+    	glNewList(objectDisplayList, GL_COMPILE);
+        {
+            double topPoint = 0.75;
+            glBegin(GL_TRIANGLES);
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -0.75, -4);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -.75, -4);
+	
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -4);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -6);
+	
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(1, -0.75, -6);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -.75, -6);
+	            
+	            glColor4f(1, 1, 0, 1f);
+	            glVertex3d(0, topPoint, -5);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -0.75, -6);
+	            glColor4f(0, 0, 1, 1f);
+	            glVertex3d(-1, -.75, -4);
+            glEnd();
+            glColor4f(1, 1, 1, 1);
+        }
+        glEndList();
+		
+	}
+
+	private static FloatBuffer asFloatBuffer(float[] value){
     	FloatBuffer buffer = BufferUtils.createFloatBuffer(value.length);
     	buffer.put(value);
     	buffer.flip();
