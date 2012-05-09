@@ -15,12 +15,13 @@ import com.jakobsteinn.marmelade.utils.ObjLoader;
 
 public class Shapes {
 	
+	// variables
 	private int gridSize;
-	
 	private float floorHeight;
 	private float ceilingHeight;
 	private float tileSize;
 	
+	// constructor
 	public Shapes(int gridSize,
 			float floorHeight, float ceilingHeight, float tileSize){
 		this.gridSize = gridSize;
@@ -28,7 +29,9 @@ public class Shapes {
 		this.ceilingHeight = ceilingHeight;
 		this.tileSize = tileSize;
 	}
-	
+
+	// basic shapres
+	//TODO: make more
 	public void drawPyramid(int objectDisplayList) {
     	glNewList(objectDisplayList, GL_COMPILE);
         {
@@ -67,6 +70,8 @@ public class Shapes {
         glEndList();
 		
 	}
+	
+	// advanced shapes and models
 	public void draw3DModel(int bunnyObjectList, File modelLocation) {
 		glNewList(bunnyObjectList, GL_COMPILE);
         {
@@ -108,6 +113,7 @@ public class Shapes {
 	}
 
 
+	// shapes for the box/walls/ceiling/floor etc.
 	public void drawWall(int wallDisplayList) {
 		glNewList(wallDisplayList, GL_COMPILE);
         glBegin(GL_QUADS);
@@ -153,6 +159,37 @@ public class Shapes {
         glEnd();
     glEndList();
 		
+	}
+
+	public void drawFloor(int floorDisplayList) {
+		glNewList(floorDisplayList, GL_COMPILE);
+        	glBegin(GL_QUADS);
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, floorHeight, gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, floorHeight, gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(gridSize, floorHeight, -gridSize);
+		    glEnd();
+		glEndList();
+		
+	}
+
+	public void drawSeiling(int ceilingDisplayList) {
+		glNewList(ceilingDisplayList, GL_COMPILE);
+	        glBegin(GL_QUADS);
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, ceilingHeight, gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, ceilingHeight, gridSize);
+	        glEnd();
+	    glEndList();
 	}
 	
 	

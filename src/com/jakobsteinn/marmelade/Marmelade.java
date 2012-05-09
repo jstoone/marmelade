@@ -147,21 +147,29 @@ public class Marmelade {
 	 */
 		//The distance where fog starts appearing.
 		//DEFAULT: 9f
-		public static float fogNear = 9f;
+		public static float fogNear = 1f;
 				
 		//The distance where the fog stops appearing (fully black here)
 		//DEFAULT: 13f
-		public static float fogFar = 13f;
+		public static float fogFar = 20f;
 				
 		//The color ofthe fog in rgba.
 		//DEFAULT: new Color(0.5f, 0.0f, 0.5f, 5f); <- pink
-		public static Color fogColor = new Color(0.5f, 0f, 0.5f, 5.0f);
+		public static Color fogColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 		
 	/*
 	 *  END OF CONFIG
 	 */
 	
+	// init all the shapes that can be drawn
 	private static Shapes shapes = new Shapes(gridSize,	floorHeight, ceilingHeight, tileSize);
+	
+	// init the mouse and keyboard handler
+	private static InputHandler inputHandler = new InputHandler(walkingSpeed, mouseSpeed, position, rotation);
+	
+	
+	
+	// calculate fps
     private static int fps;
     private static long lastFPS;
     private static long lastFrame;
@@ -169,14 +177,12 @@ public class Marmelade {
     private static long getTime() {
         return (Sys.getTime() * 1000) / Sys.getTimerResolution();
     }
-
     private static int getDelta() {
         long currentTime = getTime();
         int delta = (int) (currentTime - lastFrame);
         lastFrame = getTime();
         return delta;
     }
-
     public static void updateFPS() {
         if (getTime() - lastFPS > 1000) {
             if (printFPS) {
@@ -260,35 +266,13 @@ public class Marmelade {
         }
 
         int ceilingDisplayList = glGenLists(1);
-        glNewList(ceilingDisplayList, GL_COMPILE);
-	        glBegin(GL_QUADS);
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, ceilingHeight, gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, ceilingHeight, gridSize);
-	        glEnd();
-        glEndList();
+        shapes.drawSeiling(ceilingDisplayList);
 
         int wallDisplayList = glGenLists(1);
         shapes.drawWall(wallDisplayList);
 
         int floorDisplayList = glGenLists(1);
-        glNewList(floorDisplayList, GL_COMPILE);
-	        glBegin(GL_QUADS);
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, floorHeight, gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, floorHeight, gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(gridSize, floorHeight, -gridSize);
-	        glEnd();
-        glEndList();
+        shapes.drawFloor(floorDisplayList);
 
         int objectDisplayList = glGenLists(1);
         shapes.drawPyramid(objectDisplayList);
@@ -330,209 +314,21 @@ public class Marmelade {
             glRotatef(rotation.y, 0, 1, 0);
             glRotatef(rotation.z, 0, 0, 1);
             glTranslatef(position.x, position.y, position.z);
-
-            boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP) || Keyboard.isKeyDown(Keyboard.KEY_W);
-            boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_S);
-            boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A);
-            boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D);
-            boolean flyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-            boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-            boolean moveFaster = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
-            boolean moveSlower = Keyboard.isKeyDown(Keyboard.KEY_TAB);
-
-            if (moveFaster && !moveSlower) {
-                walkingSpeed *= 4f;
-            }
-            if (moveSlower && !moveFaster) {
-                walkingSpeed /= 10f;
-            }
-
-            if (keyUp && keyRight && !keyLeft && !keyDown) {
-                float angle = rotation.y + 45;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyUp && keyLeft && !keyRight && !keyDown) {
-                float angle = rotation.y - 45;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyUp && !keyLeft && !keyRight && !keyDown) {
-                float angle = rotation.y;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyDown && keyLeft && !keyRight && !keyUp) {
-                float angle = rotation.y - 135;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyDown && keyRight && !keyLeft && !keyUp) {
-                float angle = rotation.y + 135;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyDown && !keyUp && !keyLeft && !keyRight) {
-                float angle = rotation.y;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = -(walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyLeft && !keyRight && !keyUp && !keyDown) {
-                float angle = rotation.y - 90;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (keyRight && !keyLeft && !keyUp && !keyDown) {
-                float angle = rotation.y + 90;
-                Vector3f newPosition = new Vector3f(position);
-                float schuine = (walkingSpeed * 0.0002f) * delta;
-                float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-                float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-                newPosition.z += aanliggende;
-                newPosition.x -= overstaande;
-                position.z = newPosition.z;
-                position.x = newPosition.x;
-            }
-            if (flyUp && !flyDown) {
-                double newPositionY = (walkingSpeed * 0.0002) * delta;
-                position.y -= newPositionY;
-            }
-            if (flyDown && !flyUp) {
-                double newPositionY = (walkingSpeed * 0.0002) * delta;
-                position.y += newPositionY;
-            }
-            if (moveFaster && !moveSlower) {
-                walkingSpeed /= 4f;
-            }
-            if (moveSlower && !moveFaster) {
-                walkingSpeed *= 10f;
-            }
-            while (Mouse.next()) {
-                if (Mouse.isButtonDown(0)) {
-                    Mouse.setGrabbed(true);
-                }
-                if (Mouse.isButtonDown(1)) {
+            
+            // handles the keyboard
+            inputHandler.handleKeyboardActions(running, resizable, objectDisplayList, delta, bunnyObjectList, delta);
+            
+            // handles the mouse
+            inputHandler.handleMouseActions(maxLookDown, maxLookUp);
+            // couldn't get this to fit in...
+            // .... that's what she said ....
+            if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                if (!Mouse.isGrabbed() || Display.isFullscreen()) {
+                    running = false;
+                } else {
                     Mouse.setGrabbed(false);
                 }
-
             }
-            while (Keyboard.next()) {
-                if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
-                    position = new Vector3f(0, 0, 0);
-                    rotation = new Vector3f(0, 0, 0);
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-                    mouseSpeed += 1;
-                    System.out.println("Mouse speed changed to " + mouseSpeed + ".");
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
-                    if (mouseSpeed - 1 > 0) {
-                        mouseSpeed -= 1;
-                        System.out.println("Mouse speed changed to " + mouseSpeed + ".");
-                    }
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-                    System.out.println("Walking speed changed to " + walkingSpeed + ".");
-                    walkingSpeed += 1;
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-                    System.out.println("Walking speed changed to " + walkingSpeed + ".");
-                    walkingSpeed -= 1;
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_F11)) {
-                    try {
-                        Display.setFullscreen(!Display.isFullscreen());
-                        if (!Display.isFullscreen()) {
-                            Display.setResizable(resizable);
-                            Display.setDisplayMode(new DisplayMode(800, 600));
-                            glViewport(0, 0, Display.getWidth(), Display.getHeight());
-                            glMatrixMode(GL_PROJECTION);
-                            glLoadIdentity();
-                            gluPerspective(fov, (float) Display.getWidth() / (float) Display.getHeight(), zNear, zFar);
-                            glMatrixMode(GL_MODELVIEW);
-                            glLoadIdentity();
-                        } else {
-                            glViewport(0, 0, Display.getWidth(), Display.getHeight());
-                            glMatrixMode(GL_PROJECTION);
-                            glLoadIdentity();
-                            gluPerspective(fov, (float) Display.getWidth() / (float) Display.getHeight(), zNear, zFar);
-                            glMatrixMode(GL_MODELVIEW);
-                            glLoadIdentity();
-                        }
-                    } catch (LWJGLException ex) {
-                        Logger.getLogger(Marmelade.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-                    if (!Mouse.isGrabbed() || Display.isFullscreen()) {
-                        running = false;
-                    } else {
-                        Mouse.setGrabbed(false);
-                    }
-                }
-            }
-            
-            if (Mouse.isGrabbed()) {
-                float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
-                float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
-                if (rotation.y + mouseDX >= 360) {
-                    rotation.y = rotation.y + mouseDX - 360;
-                } else if (rotation.y + mouseDX < 0) {
-                    rotation.y = 360 - rotation.y + mouseDX;
-                } else {
-                    rotation.y += mouseDX;
-                }
-                if (rotation.x - mouseDY >= maxLookDown && rotation.x - mouseDY <= maxLookUp) {
-                    rotation.x += -mouseDY;
-                } else if (rotation.x - mouseDY < maxLookDown) {
-                    rotation.x = maxLookDown;
-                } else if (rotation.x - mouseDY > maxLookUp) {
-                    rotation.x = maxLookUp;
-                }
-            }
-            
             
             if (resizable) {
                 if (Display.wasResized()) {
