@@ -59,21 +59,47 @@ public class InputHandler {
 
 	public void handleKeyboardActions(boolean running, boolean resizeable,
 			int fov, int delta, float zNear, float zFar, Vector3f lightPosition) {
-		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP)	|| Keyboard.isKeyDown(Keyboard.KEY_W);
-		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN)	|| Keyboard.isKeyDown(Keyboard.KEY_S);
-		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT)	|| Keyboard.isKeyDown(Keyboard.KEY_A);
-		boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D);
+		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP)
+				|| Keyboard.isKeyDown(Keyboard.KEY_W);
+		boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN)
+				|| Keyboard.isKeyDown(Keyboard.KEY_S);
+		boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT)
+				|| Keyboard.isKeyDown(Keyboard.KEY_A);
+		boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_RIGHT)
+				|| Keyboard.isKeyDown(Keyboard.KEY_D);
 
-		// jump variables
-		boolean keyJump = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-
-		float jumpHeight = 0.10f;
-
-		// boolean flyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-		// boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		boolean flyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+		boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
 		boolean moveFaster = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 		boolean moveSlower = Keyboard.isKeyDown(Keyboard.KEY_TAB);
+
+		int border = Marmelade.gridSize - 1;
+
+		boolean collideX = position.x < border && position.x > -border;
+		boolean collideZ = position.z < border && position.z > -border;
+		boolean collide = collideX && collideZ;
+		//
+		// boolean collideSouthX = position.x <= border && position.x >=
+		// -border;
+		// boolean collideSouthY = position.y <= 0 && position.y >= -border;
+		// boolean collideSouthZ = position.z <= border && position.z >=
+		// -border;
+		// boolean collideSouth = collideSouthZ && collideSouthY &&
+		// collideSouthX;
+		//
+		// boolean collideEastX = position.x <= border && position.x >= -border;
+		// boolean collideEastY = position.y <= 0 && position.y >= -border;
+		// boolean collideEastZ = position.z <= border && position.z >= -border;
+		// boolean collideEast = collideEastX && collideEastY && collideEastZ;
+		//
+		// boolean collideWestX = position.x <= border && position.x >= -border;
+		// boolean collideWestY = position.y <= 0 && position.y >= -border;
+		// boolean collideWestZ = position.z <= border && position.z >= -border;
+		// boolean collideWest = collideWestX && collideWestY && collideWestZ;
+
+		// boolean collideBox = collideNorth || collideSouth || collideEast ||
+		// collideWest;
 
 		if (moveFaster && !moveSlower) {
 			walkingSpeed *= 4f;
@@ -82,43 +108,57 @@ public class InputHandler {
 			walkingSpeed /= 10f;
 		}
 
-		if (keyUp && keyRight && !keyLeft && !keyDown && position.z < 49
-				&& position.x > -49) {
+		boolean canMoveMinusX = true;
+		boolean canMovePlusX = true;
+		
+		boolean canMoveMinusZ = true;
+		boolean canMovePlusZ = true;
+		
+		if(position.x > border){
+			canMovePlusX = false;
+		}
+		if(position.x < -border){
+			canMoveMinusX = false;
+		}
+		if (position.z < -border) {
+			canMoveMinusZ = false;
+		}
+		if (position.z > border) {
+			canMovePlusZ = false;
+		}
+		
+
+		if (keyUp && keyRight && !keyLeft && !keyDown) {
 			float angle = rotation.y + 45;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
 			float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
 			float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
-			newPosition.z += adjecent;
-			newPosition.x -= hypotenuse;
-			position.z = newPosition.z;
-			position.x = newPosition.x;
+			if(canMoveMinusZ == true){
+				newPosition.z += adjecent;
+				position.z = newPosition.z;
+			}
+			if(canMovePlusX == true){
+				newPosition.x -= hypotenuse;
+				position.x = newPosition.x;
+			}
 		}
-		if (keyUp && keyLeft && !keyRight && !keyDown && position.z < 49
-				&& position.x < 49) {
+		if (keyUp && keyLeft && !keyRight && !keyDown) {
 			float angle = rotation.y - 45;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
 			float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
 			float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
-			newPosition.z += adjecent;
-			newPosition.x -= hypotenuse;
-			position.z = newPosition.z;
-			position.x = newPosition.x;
+			if(canMoveMinusZ == true){
+				newPosition.z += adjecent;
+				position.z = newPosition.z;
+			}
+			if(canMoveMinusX == true){
+				newPosition.x -= hypotenuse;
+				position.x = newPosition.x;
+			}
 		}
-		if (keyUp && !keyLeft && !keyRight && !keyDown && position.z < 49) {
-			float angle = rotation.y;
-			Vector3f newPosition = new Vector3f(position);
-			float diagonal = (walkingSpeed * 0.0002f) * delta;
-			float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
-			float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
-			newPosition.z += adjecent;
-			newPosition.x -= hypotenuse;
-			position.z = newPosition.z;
-			position.x = newPosition.x;
-		}
-		if (keyDown && keyLeft && !keyRight && !keyUp && position.z > -49
-				&& position.x < 49) {
+		if (keyDown && keyLeft && !keyRight && !keyUp) {
 			float angle = rotation.y - 135;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
@@ -129,8 +169,7 @@ public class InputHandler {
 			position.z = newPosition.z;
 			position.x = newPosition.x;
 		}
-		if (keyDown && keyRight && !keyLeft && !keyUp && position.z > -49
-				&& position.x > -49) {
+		if (keyDown && keyRight && !keyLeft && !keyUp) {
 			float angle = rotation.y + 135;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
@@ -141,7 +180,17 @@ public class InputHandler {
 			position.z = newPosition.z;
 			position.x = newPosition.x;
 		}
-		if (keyDown && !keyUp && !keyLeft && !keyRight && position.z > -49) {
+		if (keyUp && !keyLeft && !keyRight && !keyDown) {
+			float angle = rotation.y;
+			Vector3f newPosition = new Vector3f(position);
+			float diagonal = (walkingSpeed * 0.0002f) * delta;
+			float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+			if(canMoveMinusZ == true){
+				newPosition.z += adjecent;
+				position.z = newPosition.z;
+			}
+		}
+		if (keyDown && !keyUp && !keyLeft && !keyRight) {
 			float angle = rotation.y;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = -(walkingSpeed * 0.0002f) * delta;
@@ -152,7 +201,7 @@ public class InputHandler {
 			position.z = newPosition.z;
 			position.x = newPosition.x;
 		}
-		if (keyLeft && !keyRight && !keyUp && !keyDown && position.x < 49) {
+		if (keyLeft && !keyRight && !keyUp && !keyDown) {
 			float angle = rotation.y - 90;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
@@ -163,7 +212,7 @@ public class InputHandler {
 			position.z = newPosition.z;
 			position.x = newPosition.x;
 		}
-		if (keyRight && !keyLeft && !keyUp && !keyDown && position.x > -49) {
+		if (keyRight && !keyLeft && !keyUp && !keyDown) {
 			float angle = rotation.y + 90;
 			Vector3f newPosition = new Vector3f(position);
 			float diagonal = (walkingSpeed * 0.0002f) * delta;
@@ -175,22 +224,15 @@ public class InputHandler {
 			position.x = newPosition.x;
 		}
 
-		if (keyJump && position.y > 0) {
-			Vector3f newPosition = new Vector3f(position);
-			float diagonal = (walkingSpeed * 0.0002f) * delta;
-			position.y -= newPosition.y / 0.002;
-		} else if(!keyJump && position.y <= jumpHeight) {
-			position.y += gravity;
+		if (flyUp && !flyDown && position.y >= -49) {
+			double newPositionY = (walkingSpeed * 0.0002) * delta;
+			position.y -= newPositionY;
+		}
+		if (flyDown && !flyUp && position.y <= 0) {
+			double newPositionY = (walkingSpeed * 0.0002) * delta;
+			position.y += newPositionY;
 		}
 
-		// if (flyUp && !flyDown && position.y > -49) {
-		// double newPositionY = (walkingSpeed * 0.0002) * delta;
-		// position.y -= newPositionY;
-		// }
-		// if (flyDown && !flyUp && position.y < 0) {
-		// double newPositionY = (walkingSpeed * 0.0002) * delta;
-		// position.y += newPositionY;
-		// }
 		if (moveFaster && !moveSlower) {
 			walkingSpeed /= 4f;
 		}
