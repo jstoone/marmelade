@@ -125,7 +125,7 @@ public class Marmelade {
 	  
 		//The height of the ceiling.
 		//DEFAULT: 10
-		public static final float ceilingHeight = 10f;
+		public static final float ceilingHeight = 50f;
 		
 		//The height of the floor.
 		//DEFAULT: -1:
@@ -294,13 +294,17 @@ public class Marmelade {
             glCallList(floorDisplayList);
             glCallList(ceilingDisplayList);
             glCallList(wallDisplayList);
+            
             glPushMatrix();
             glRotatef(180, 0.0f, 1.0f, 0.0f);
+            glColor3f(1.0f, 0.0f, 0.0f);
             glCallList(bunnyObjectList);
+            glColor3f(1.0f, 1.0f, 1.0f);
             glPopMatrix();
-            glDisable(GL_CULL_FACE);
+            
             glDisable(GL_LIGHTING);
             glCallList(objectDisplayList);
+            glDisable(GL_CULL_FACE);
             glBindTexture(GL_TEXTURE_2D, 0);
             
 
@@ -314,7 +318,7 @@ public class Marmelade {
             
             
             // handles the keyboard
-            inputHandler.handleKeyboardActions(running, resizable, objectDisplayList, delta, bunnyObjectList, delta);
+            inputHandler.handleKeyboardActions(running, resizable, objectDisplayList, delta, bunnyObjectList, delta, lightPosition);
             
             // handles the mouse
             inputHandler.handleMouseActions(maxLookDown, maxLookUp);
@@ -348,6 +352,8 @@ public class Marmelade {
             if (Display.isCloseRequested()) {
                 running = false;
             }
+            
+            System.out.println("X: " + position.x + " Y: " + position.y + " Z: " + position.z);
         }
         glDeleteTextures(floorTexture);
         glDeleteLists(floorDisplayList, 1);
@@ -365,7 +371,7 @@ public class Marmelade {
                 Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
             } else {
                 Display.setResizable(resizable);
-                Display.setDisplayMode(new DisplayMode(800, 600));
+                Display.setDisplayMode(new DisplayMode(1024, 768));
             }
             Display.setTitle("Minefront Pre-Alpha 0.02 LWJGL Port");
             Display.setVSyncEnabled(vsync);
@@ -382,7 +388,4 @@ public class Marmelade {
     	buffer.flip();
     	return buffer;
     }
-    
-    
-    
 }

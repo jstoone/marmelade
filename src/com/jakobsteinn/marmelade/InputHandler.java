@@ -52,7 +52,7 @@ public class InputHandler {
         }
 	}
 	
-	public void handleKeyboardActions(boolean running, boolean resizeable, int fov, int delta, float zNear, float zFar ){
+	public void handleKeyboardActions(boolean running, boolean resizeable, int fov, int delta, float zNear, float zFar, Vector3f lightPosition ){
 		boolean keyUp = Keyboard.isKeyDown(Keyboard.KEY_UP) || Keyboard.isKeyDown(Keyboard.KEY_W);
         boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_S);
         boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A);
@@ -69,7 +69,7 @@ public class InputHandler {
             walkingSpeed /= 10f;
         }
 
-        if (keyUp && keyRight && !keyLeft && !keyDown) {
+        if (keyUp && keyRight && !keyLeft && !keyDown && position.z < -49) {
             float angle = rotation.y + 45;
             Vector3f newPosition = new Vector3f(position);
             float schuine = (walkingSpeed * 0.0002f) * delta;
@@ -157,11 +157,11 @@ public class InputHandler {
             position.z = newPosition.z;
             position.x = newPosition.x;
         }
-        if (flyUp && !flyDown) {
+        if (flyUp && !flyDown && position.y > -49) {
             double newPositionY = (walkingSpeed * 0.0002) * delta;
             position.y -= newPositionY;
         }
-        if (flyDown && !flyUp) {
+        if (flyDown && !flyUp && position.y < 0) {
             double newPositionY = (walkingSpeed * 0.0002) * delta;
             position.y += newPositionY;
         }
