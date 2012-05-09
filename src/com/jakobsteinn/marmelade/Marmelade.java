@@ -294,10 +294,13 @@ public class Marmelade {
             glCallList(floorDisplayList);
             glCallList(ceilingDisplayList);
             glCallList(wallDisplayList);
-            glCallList(objectDisplayList);
+            glPushMatrix();
+            glRotatef(180, 0.0f, 1.0f, 0.0f);
             glCallList(bunnyObjectList);
+            glPopMatrix();
             glDisable(GL_CULL_FACE);
             glDisable(GL_LIGHTING);
+            glCallList(objectDisplayList);
             glBindTexture(GL_TEXTURE_2D, 0);
             
 
