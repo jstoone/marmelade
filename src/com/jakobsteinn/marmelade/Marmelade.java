@@ -1,17 +1,11 @@
 package com.jakobsteinn.marmelade;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
+import org.newdawn.slick.Color;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -19,11 +13,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.GLContext;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.Color;
 
 /**
 * A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
@@ -157,6 +148,25 @@ public class Marmelade {
 		//DEFAULT: new Color(0.5f, 0.0f, 0.5f, 5f); <- pink
 		public static Color fogColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 		
+		
+	/* 
+	 * ***********************************************
+	 * ******             LIGHTING             *******
+	 * ***********************************************
+	 */
+		// Position of the lightsource
+		//DEFAULT: new Vector3f(position.x, position.y, position.z);
+		//       : or just = position; since they are bouth Vector3's
+        public static Vector3f lightPosition = new Vector3f(3.0f, 1.0f, -10.0f);
+		//public static Vector3f lightPosition = position;
+        
+        // light intensity
+        private static float[] lightIntensity = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+        		
+        // light color
+        private static float[] lightColor = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+
+		
 	/*
 	 *  END OF CONFIG
 	 */
@@ -215,73 +225,55 @@ public class Marmelade {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glEnable(GL_ALPHA_TEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glEnable(GL_FOG);
 
-        {
-            FloatBuffer fogColours = BufferUtils.createFloatBuffer(
-                    4);
-            fogColours.put(new float[]{fogColor.r, fogColor.g, fogColor.b, fogColor.a});
-            glClearColor(fogColor.r, fogColor.g, fogColor.b, fogColor.a);
-            fogColours.flip();
-            glFog(GL_FOG_COLOR, fogColours);
-            glFogi(GL_FOG_MODE, GL_LINEAR);
-            glHint(GL_FOG_HINT, GL_NICEST);
-            glFogf(GL_FOG_START, fogNear);
-            glFogf(GL_FOG_END, fogFar);
-            glFogf(GL_FOG_DENSITY, 0.005f);
-        }
-
+        // generate the texture for the floor, walls and ceiling
         int floorTexture = glGenTextures();
-        {
-            InputStream in = null;
-            try {
-                in = new FileInputStream("res/floor.png");
-                PNGDecoder decoder = new PNGDecoder(in);
-                ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
-                decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
-                buffer.flip();
-                in.close();
-                glBindTexture(GL_TEXTURE_2D, floorTexture);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-                glBindTexture(GL_TEXTURE_2D, 0);
-            } catch (FileNotFoundException ex) {
-                System.err.println("Failed to find the texture files.");
-                Display.destroy();
-                System.exit(1);
-            } catch (IOException ex) {
-                System.err.println("Failed to load the texture files.");
-                Display.destroy();
-                System.exit(1);
-            }
-        }
-
+        Textures.genBoxTextures(floorTexture);
+        
+        // draw the ceiling
         int ceilingDisplayList = glGenLists(1);
         shapes.drawSeiling(ceilingDisplayList);
 
+        // draw the wall
         int wallDisplayList = glGenLists(1);
         shapes.drawWall(wallDisplayList);
 
+        // draw the floor
         int floorDisplayList = glGenLists(1);
         shapes.drawFloor(floorDisplayList);
 
+        // draw the pyramid!
         int objectDisplayList = glGenLists(1);
         shapes.drawPyramid(objectDisplayList);
         
+        // draw 3d model! (bunny)
         int bunnyObjectList = glGenLists(1);
         shapes.draw3DModel(bunnyObjectList, new File("res/bunny.obj"));
 
+        // prepare for fps counting!
         getDelta();
         lastFPS = getTime();
+        
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_ALPHA_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        glCullFace(GL_BACK);
+        glEnable(GL_FOG);
+        
+        {
+        	FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
+        	fogColours.put(new float[]{fogColor.r, fogColor.g, fogColor.b, fogColor.a});
+        	glClearColor(fogColor.r, fogColor.g, fogColor.b, fogColor.a);
+        	fogColours.flip();
+        	glFog(GL_FOG_COLOR, fogColours);
+        	glFogi(GL_FOG_MODE, GL_LINEAR);
+        	glHint(GL_FOG_HINT, GL_NICEST);
+        	glFogf(GL_FOG_START, fogNear);
+        	glFogf(GL_FOG_END, fogFar);
+        	glFogf(GL_FOG_DENSITY, 0.005f);
+        }
+
 
         while (running) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -291,21 +283,21 @@ public class Marmelade {
 
             glShadeModel(GL_SMOOTH);
             glEnable(GL_CULL_FACE);
-            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_DEPTH_TEST);
+            glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHT0);
+            glLightModel(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(lightColor));
+            glLight(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(lightIntensity));
+            glCullFace(GL_BACK);
+            glEnable(GL_COLOR_MATERIAL);
+            glColorMaterial(GL_FRONT, GL_DIFFUSE);
             glCallList(floorDisplayList);
             glCallList(ceilingDisplayList);
             glCallList(wallDisplayList);
             glCallList(objectDisplayList);
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_LIGHTING);
-            glEnable(GL_LIGHT0);
-            glLightModel(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[]{0.5f, 0.5f, 0.5f, 1.0f}));
-            glLight(GL_LIGHT0, GL_DIFFUSE, asFloatBuffer(new float[]{0.1f, 0.1f, 0.1f, 1.0f}));
-            glCullFace(GL_BACK);
-            glEnable(GL_COLOR_MATERIAL);
-            glColorMaterial(GL_FRONT, GL_DIFFUSE);
             glCallList(bunnyObjectList);
             glDisable(GL_CULL_FACE);
+            glDisable(GL_LIGHTING);
             glBindTexture(GL_TEXTURE_2D, 0);
             
 
@@ -314,6 +306,9 @@ public class Marmelade {
             glRotatef(rotation.y, 0, 1, 0);
             glRotatef(rotation.z, 0, 0, 1);
             glTranslatef(position.x, position.y, position.z);
+            
+            glLight(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[]{lightPosition.x, lightPosition.y, lightPosition.z, 1.0f}));
+            
             
             // handles the keyboard
             inputHandler.handleKeyboardActions(running, resizable, objectDisplayList, delta, bunnyObjectList, delta);
