@@ -19,10 +19,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class InputHandler {
 	
-	int walkingSpeed;
-	int mouseSpeed;
 	Vector3f position;
 	Vector3f rotation;
+	int walkingSpeed;
+	int mouseSpeed;
+	int gravity = 3;
+	
+	
 	
 	public InputHandler(int walkingSpeed, int mouseSpeed, Vector3f position, Vector3f rotation){
 		this.walkingSpeed = walkingSpeed;
@@ -57,8 +60,16 @@ public class InputHandler {
         boolean keyDown = Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_S);
         boolean keyLeft = Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A);
         boolean keyRight = Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D);
-        boolean flyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-        boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+        
+        // jump variables
+        boolean isJumping = false;
+        boolean isMoving = false;
+        boolean keyJump = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+        float jumpHeight = 0.5f;
+        
+        //boolean flyUp = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+        //boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+        
         boolean moveFaster = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
         boolean moveSlower = Keyboard.isKeyDown(Keyboard.KEY_TAB);
 
@@ -69,102 +80,115 @@ public class InputHandler {
             walkingSpeed /= 10f;
         }
 
-        if (keyUp && keyRight && !keyLeft && !keyDown && position.z < -49) {
+        if (keyUp && keyRight && !keyLeft && !keyDown && position.z < 49 && position.x > -49) {
             float angle = rotation.y + 45;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyUp && keyLeft && !keyRight && !keyDown) {
+        if (keyUp && keyLeft && !keyRight && !keyDown && position.z < 49 && position.x < 49) {
             float angle = rotation.y - 45;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyUp && !keyLeft && !keyRight && !keyDown) {
+        if (keyUp && !keyLeft && !keyRight && !keyDown && position.z < 49 ) {
             float angle = rotation.y;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyDown && keyLeft && !keyRight && !keyUp) {
+        if (keyDown && keyLeft && !keyRight && !keyUp && position.z > -49 && position.x < 49) {
             float angle = rotation.y - 135;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyDown && keyRight && !keyLeft && !keyUp) {
+        if (keyDown && keyRight && !keyLeft && !keyUp && position.z > -49 && position.x > -49) {
             float angle = rotation.y + 135;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyDown && !keyUp && !keyLeft && !keyRight) {
+        if (keyDown && !keyUp && !keyLeft && !keyRight && position.z > -49) {
             float angle = rotation.y;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = -(walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = -(walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyLeft && !keyRight && !keyUp && !keyDown) {
+        if (keyLeft && !keyRight && !keyUp && !keyDown && position.x < 49) {
             float angle = rotation.y - 90;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (keyRight && !keyLeft && !keyUp && !keyDown) {
+        if (keyRight && !keyLeft && !keyUp && !keyDown && position.x > -49) {
             float angle = rotation.y + 90;
             Vector3f newPosition = new Vector3f(position);
-            float schuine = (walkingSpeed * 0.0002f) * delta;
-            float aanliggende = schuine * (float) Math.cos(Math.toRadians(angle));
-            float overstaande = (float) (Math.sin(Math.toRadians(angle)) * schuine);
-            newPosition.z += aanliggende;
-            newPosition.x -= overstaande;
+            float diagonal = (walkingSpeed * 0.0002f) * delta;
+            float adjecent = diagonal * (float) Math.cos(Math.toRadians(angle));
+            float hypotenuse = (float) (Math.sin(Math.toRadians(angle)) * diagonal);
+            newPosition.z += adjecent;
+            newPosition.x -= hypotenuse;
             position.z = newPosition.z;
             position.x = newPosition.x;
+            isMoving = true;
         }
-        if (flyUp && !flyDown && position.y > -49) {
-            double newPositionY = (walkingSpeed * 0.0002) * delta;
-            position.y -= newPositionY;
+        
+        if(isJumping){
+        	
         }
-        if (flyDown && !flyUp && position.y < 0) {
-            double newPositionY = (walkingSpeed * 0.0002) * delta;
-            position.y += newPositionY;
-        }
+        
+//      if (flyUp && !flyDown && position.y > -49) {
+//          double newPositionY = (walkingSpeed * 0.0002) * delta;
+//          position.y -= newPositionY;
+//      }
+//      if (flyDown && !flyUp && position.y < 0) {
+//          double newPositionY = (walkingSpeed * 0.0002) * delta;
+//          position.y += newPositionY;
+//      }
         if (moveFaster && !moveSlower) {
             walkingSpeed /= 4f;
         }

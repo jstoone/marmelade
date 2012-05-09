@@ -61,11 +61,15 @@ public class Marmelade {
 	 */
 		//The position of the player as a 3D vector (xyz).
 		//DEFAULT: new Vector3f(0.0f, 0.0f, -5.0f);
-		public static Vector3f position = new Vector3f(0, 0, -5.0f);
+		public static Vector3f position = new Vector3f(0.0f, 0.0f, 10.0f);
 		
 		//Defines the walking speed, where 10 is the standard.
 		//DEFAULT: 10
 		public static int walkingSpeed = 10;
+		
+		public static float velocityX = 0.0002f;
+		public static float velocityY = 0.0002f;
+		public static float velocityZ = 0.0002f;
 		
 		//Defines the mouse speed.
 		//DEFAULT: -2
@@ -79,7 +83,7 @@ public class Marmelade {
 		// and 90 is straight down. The value must be between (including) -90 and
 		// 90.
 		//DEFAULT: new Vector3f(0.0f, 0.0f, 0.0f);
-		public static Vector3f rotation = new Vector3f(0.0f, 0.0f, 0.0f);
+		public static Vector3f rotation = new Vector3f(0.0f, 180.0f, 0.0f);
 		
 		//Defines the maximum angle at which the player can look up.
 		//DEFAULT: 85
