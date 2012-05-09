@@ -146,7 +146,7 @@ public class Marmelade {
 				
 		//The color ofthe fog in rgba.
 		//DEFAULT: new Color(0.5f, 0.0f, 0.5f, 5f); <- pink
-		public static Color fogColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+		public static Color fogColor = new Color(0.5f, 0.2f, 0.5f, 1.0f);
 		
 		
 	/* 
