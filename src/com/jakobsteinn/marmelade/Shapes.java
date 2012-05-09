@@ -12,9 +12,24 @@ import org.lwjgl.util.vector.Vector3f;
 import com.jakobsteinn.marmelade.utils.Face;
 import com.jakobsteinn.marmelade.utils.Model;
 import com.jakobsteinn.marmelade.utils.ObjLoader;
+
 public class Shapes {
 	
-	public static void drawPyramid(int objectDisplayList) {
+	private int gridSize;
+	
+	private float floorHeight;
+	private float ceilingHeight;
+	private float tileSize;
+	
+	public Shapes(int gridSize,
+			float floorHeight, float ceilingHeight, float tileSize){
+		this.gridSize = gridSize;
+		this.floorHeight = floorHeight;
+		this.ceilingHeight = ceilingHeight;
+		this.tileSize = tileSize;
+	}
+	
+	public void drawPyramid(int objectDisplayList) {
     	glNewList(objectDisplayList, GL_COMPILE);
         {
             double topPoint = 0.75;
@@ -52,13 +67,12 @@ public class Shapes {
         glEndList();
 		
 	}
-
-	public static void drawBunny(int bunnyObjectList) {
+	public void draw3DModel(int bunnyObjectList, File modelLocation) {
 		glNewList(bunnyObjectList, GL_COMPILE);
         {
         	Model m = null;
         	try {
-				m = ObjLoader.loadModel(new File("src/com/jakobsteinn/marmelade/bunny.obj"));
+				m = ObjLoader.loadModel(modelLocation);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				Display.destroy();
@@ -93,4 +107,54 @@ public class Shapes {
         glEndList();
 	}
 
+
+	public void drawWall(int wallDisplayList) {
+		glNewList(wallDisplayList, GL_COMPILE);
+        glBegin(GL_QUADS);
+	        // North wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(gridSize, ceilingHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+	        
+	        // West wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(-gridSize, floorHeight, +gridSize);
+	
+	        // East wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(+gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(+gridSize, floorHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, -gridSize);
+	
+	        // South wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, floorHeight, +gridSize);
+        glEnd();
+    glEndList();
+		
+	}
+	
+	
+	
 }

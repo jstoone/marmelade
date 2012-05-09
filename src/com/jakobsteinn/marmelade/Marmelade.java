@@ -25,10 +25,6 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 
-import com.jakobsteinn.marmelade.utils.Face;
-import com.jakobsteinn.marmelade.utils.Model;
-import com.jakobsteinn.marmelade.utils.ObjLoader;
-
 /**
 * A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
 * forward; A/LEFT = strafe left; D/RIGHT = strafe right; S/DOWN = backward;
@@ -36,7 +32,7 @@ import com.jakobsteinn.marmelade.utils.ObjLoader;
 * = increase walking speed; Z = decrease walking speed; O = increase mouse
 * speed; L = decrease mouse speed; C = reset position
 *
-* @author Oskar Veerhoek, Yan Chernikov
+* @author Oskar Veerhoek, Yan Chernikov, Jakob Steinn
 */
 public class Marmelade {
 	
@@ -165,6 +161,7 @@ public class Marmelade {
 	 *  END OF CONFIG
 	 */
 	
+	private static Shapes shapes = new Shapes(gridSize,	floorHeight, ceilingHeight, tileSize);
     private static int fps;
     private static long lastFPS;
     private static long lastFrame;
@@ -264,70 +261,20 @@ public class Marmelade {
 
         int ceilingDisplayList = glGenLists(1);
         glNewList(ceilingDisplayList, GL_COMPILE);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0, 0);
-        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(gridSize, ceilingHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(gridSize, ceilingHeight, gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(-gridSize, ceilingHeight, gridSize);
-        glEnd();
+	        glBegin(GL_QUADS);
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, ceilingHeight, gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, ceilingHeight, gridSize);
+	        glEnd();
         glEndList();
 
         int wallDisplayList = glGenLists(1);
-        glNewList(wallDisplayList, GL_COMPILE);
-
-        glBegin(GL_QUADS);
-
-        // North wall
-
-        glTexCoord2f(0, 0);
-        glVertex3f(-gridSize, floorHeight, -gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(gridSize, floorHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(gridSize, ceilingHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-
-        // West wall
-
-        glTexCoord2f(0, 0);
-        glVertex3f(-gridSize, floorHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(-gridSize, floorHeight, +gridSize);
-
-        // East wall
-
-        glTexCoord2f(0, 0);
-        glVertex3f(+gridSize, floorHeight, -gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(+gridSize, floorHeight, +gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(+gridSize, ceilingHeight, -gridSize);
-
-        // South wall
-
-        glTexCoord2f(0, 0);
-        glVertex3f(-gridSize, floorHeight, +gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, 0);
-        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-        glTexCoord2f(0, gridSize * 10 * tileSize);
-        glVertex3f(+gridSize, floorHeight, +gridSize);
-
-        glEnd();
-
-        glEndList();
+        shapes.drawWall(wallDisplayList);
 
         int floorDisplayList = glGenLists(1);
         glNewList(floorDisplayList, GL_COMPILE);
@@ -344,48 +291,10 @@ public class Marmelade {
         glEndList();
 
         int objectDisplayList = glGenLists(1);
-        drawPyramid(objectDisplayList);
+        shapes.drawPyramid(objectDisplayList);
         
         int bunnyObjectList = glGenLists(1);
-        glNewList(bunnyObjectList, GL_COMPILE);
-        {
-        	Model m = null;
-        	try {
-				m = ObjLoader.loadModel(new File("src/com/jakobsteinn/marmelade/bunny.obj"));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				Display.destroy();
-				System.exit(1);
-			} catch (IOException e){
-				e.printStackTrace();
-				Display.destroy();
-				System.exit(1);
-			}
-        	
-        	glTranslatef(0.0f, 0.8f, 0.0f);
-        	glBegin(GL_TRIANGLES);
-        	for(Face faces : m.faces){
-        		Vector3f n1 = m.normals.get((int) faces.normals.x -1);
-        		glNormal3f(n1.x, n1.y, n1.z);
-        		Vector3f v1 = m.vertices.get((int) faces.vertex.x -1);
-        		glVertex3f(v1.x, v1.y, v1.z);
-        		
-        		Vector3f n2 = m.normals.get((int) faces.normals.y -1);
-        		glNormal3f(n2.x, n2.y, n2.z);
-        		Vector3f v2 = m.vertices.get((int) faces.vertex.y -1);
-        		glVertex3f(v2.x, v2.y, v2.z);
-        		
-        		Vector3f n3 = m.normals.get((int) faces.normals.z -1);
-        		glNormal3f(n3.x, n3.y, n3.z);
-        		Vector3f v3 = m.vertices.get((int) faces.vertex.z -1);
-        		glVertex3f(v3.x, v3.y, v3.z);
-        	}
-        	glEnd();
-        	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-        glEndList();
-        
-        
+        shapes.draw3DModel(bunnyObjectList, new File("res/bunny.obj"));
 
         getDelta();
         lastFPS = getTime();
@@ -671,45 +580,6 @@ public class Marmelade {
             System.err.println("Display initialization failed.");
             System.exit(1);
         }
-	}
-
-	private static void drawPyramid(int objectDisplayList) {
-    	glNewList(objectDisplayList, GL_COMPILE);
-        {
-            double topPoint = 0.75;
-            glBegin(GL_TRIANGLES);
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -0.75, -4);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -.75, -4);
-	
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -4);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -6);
-	
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(1, -0.75, -6);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -.75, -6);
-	            
-	            glColor4f(1, 1, 0, 1f);
-	            glVertex3d(0, topPoint, -5);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -0.75, -6);
-	            glColor4f(0, 0, 1, 1f);
-	            glVertex3d(-1, -.75, -4);
-            glEnd();
-            glColor4f(1, 1, 1, 1);
-        }
-        glEndList();
-		
 	}
 
 	private static FloatBuffer asFloatBuffer(float[] value){
