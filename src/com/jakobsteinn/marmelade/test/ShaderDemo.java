@@ -62,6 +62,9 @@ public class ShaderDemo {
 		wall = glGenLists(1);
 		Shapes.drawWall(wall);
 		
+		floor = glGenLists(1);
+		Shapes.drawFloor(floor);
+		
 		
 
 		while (!Display.isCloseRequested()) {
@@ -74,6 +77,9 @@ public class ShaderDemo {
 			glUniform1f(diffuseModifierUniform, 1.5f);
 			
 			glCallList(bunny);
+			glCallList(ceiling);
+			glCallList(wall);
+			glCallList(floor);
 			
 			glUseProgram(0);
 
