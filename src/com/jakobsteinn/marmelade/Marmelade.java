@@ -209,7 +209,7 @@ public class Marmelade {
         
         // draw the ceiling
         int ceilingDisplayList = glGenLists(1);
-        Shapes.drawSeiling(ceilingDisplayList);
+        Shapes.drawCeiling(ceilingDisplayList);
 
         // draw the wall
         int wallDisplayList = glGenLists(1);
