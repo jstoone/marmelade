@@ -38,6 +38,7 @@ public class Shapes {
 		//DEFAULT: -1:
 		public static final float floorHeight = -1;
 	
+	// constructor
 	public Shapes(){
 	}
 
@@ -83,13 +84,12 @@ public class Shapes {
 	}
 	
 	// advanced shapes and models
-	public static void draw3DModel(int modelObjectList, File modelFileLocation) {
-		modelObjectList = glGenLists(1);
-		glNewList(modelObjectList, GL_COMPILE);
+	public static void draw3DModel(int bunnyObjectList, File modelLocation) {
+		glNewList(bunnyObjectList, GL_COMPILE);
         {
         	Model m = null;
         	try {
-				m = ObjLoader.loadModel(modelFileLocation);
+				m = ObjLoader.loadModel(modelLocation);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				Display.destroy();
@@ -128,48 +128,48 @@ public class Shapes {
 	// shapes for the box/walls/ceiling/floor etc.
 	public static void drawWall(int wallDisplayList) {
 		glNewList(wallDisplayList, GL_COMPILE);
-        	glBegin(GL_QUADS);
-		        // North wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        
-		        // West wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, floorHeight, +gridSize);
-		
-		        // East wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(+gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(+gridSize, floorHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, -gridSize);
-		
-		        // South wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, floorHeight, +gridSize);
-	        glEnd();
-        glEndList();
+        glBegin(GL_QUADS);
+	        // North wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(gridSize, ceilingHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+	        
+	        // West wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(-gridSize, floorHeight, +gridSize);
+	
+	        // East wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(+gridSize, floorHeight, -gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(+gridSize, floorHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, -gridSize);
+	
+	        // South wall
+	        glTexCoord2f(0, 0);
+	        glVertex3f(-gridSize, floorHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, 0);
+	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+	        glTexCoord2f(0, gridSize * 10 * tileSize);
+	        glVertex3f(+gridSize, floorHeight, +gridSize);
+        glEnd();
+    glEndList();
 		
 	}
 
@@ -189,7 +189,7 @@ public class Shapes {
 		
 	}
 
-	public static void drawSeiling(int ceilingDisplayList) {
+	public static void drawCeiling(int ceilingDisplayList) {
 		glNewList(ceilingDisplayList, GL_COMPILE);
 	        glBegin(GL_QUADS);
 		        glTexCoord2f(0, 0);
