@@ -91,17 +91,17 @@ public class Shapes {
         	glTranslatef(0.0f, 0.8f, 0.0f);
         	glBegin(GL_TRIANGLES);
         	for(Face faces : m.faces){
-        		Vector3f n1 = m.normals.get((int) faces.normals.x -1);
+        		Vector3f n1 = m.normals.get((int) faces.normal.x -1);
         		glNormal3f(n1.x, n1.y, n1.z);
         		Vector3f v1 = m.vertices.get((int) faces.vertex.x -1);
         		glVertex3f(v1.x, v1.y, v1.z);
         		
-        		Vector3f n2 = m.normals.get((int) faces.normals.y -1);
+        		Vector3f n2 = m.normals.get((int) faces.normal.y -1);
         		glNormal3f(n2.x, n2.y, n2.z);
         		Vector3f v2 = m.vertices.get((int) faces.vertex.y -1);
         		glVertex3f(v2.x, v2.y, v2.z);
         		
-        		Vector3f n3 = m.normals.get((int) faces.normals.z -1);
+        		Vector3f n3 = m.normals.get((int) faces.normal.z -1);
         		glNormal3f(n3.x, n3.y, n3.z);
         		Vector3f v3 = m.vertices.get((int) faces.vertex.z -1);
         		glVertex3f(v3.x, v3.y, v3.z);

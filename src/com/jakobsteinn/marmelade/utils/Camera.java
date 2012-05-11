@@ -129,6 +129,9 @@ public class Camera {
 		if (flyDown && !flyUp) {
 			y -= speedY * delta;
 		}
+		
+		
+		
     }
     
     public void moveFromLook(float dx, float dy, float dz) {
