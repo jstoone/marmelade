@@ -36,7 +36,7 @@ public class Shapes {
 		
 		//The height of the floor.
 		//DEFAULT: -1:
-		public static final float floorHeight = -2;
+		public static final float floorHeight = -1.9f;
 	
 	// constructor
 	public Shapes(){
