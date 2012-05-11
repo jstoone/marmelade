@@ -105,7 +105,7 @@ public class Marmelade {
 		  
 		//The maximal distance from the camera where objects are rendered.
 		//DEFAULT: 20f
-		public static float zFar = 20f;
+		public static float zFar = 200f;
 		
 		//Defines the field of view.
 		//DEFAULT: 68
@@ -120,7 +120,7 @@ public class Marmelade {
 		//1000, or OpenGL will start to freak out, though.
 		// floor area, watch out for the walls, the pic's get tiny
 		//DEFAULT: 10;
-		public static final int gridSize = 50;
+		public static final int gridSize = 10;
 		
 		//The size of tiles, where 0.5 is the standard size. Increasing the size by
 		//results in smaller tiles, and vice versa.
@@ -129,7 +129,7 @@ public class Marmelade {
 	  
 		//The height of the ceiling.
 		//DEFAULT: 10
-		public static final float ceilingHeight = 50f;
+		public static final float ceilingHeight = 10f;
 		
 		//The height of the floor.
 		//DEFAULT: -1:
@@ -142,11 +142,11 @@ public class Marmelade {
 	 */
 		//The distance where fog starts appearing.
 		//DEFAULT: 9f
-		public static float fogNear = 1f;
+		public static float fogNear = 20f;
 				
 		//The distance where the fog stops appearing (fully black here)
 		//DEFAULT: 13f
-		public static float fogFar = 20f;
+		public static float fogFar = 300f;
 				
 		//The color ofthe fog in rgba.
 		//DEFAULT: new Color(0.5f, 0.0f, 0.5f, 5f); <- pink
@@ -263,20 +263,20 @@ public class Marmelade {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         glCullFace(GL_BACK);
-        glEnable(GL_FOG);
-        
-        {
-        	FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
-        	fogColours.put(new float[]{fogColor.r, fogColor.g, fogColor.b, fogColor.a});
-        	glClearColor(fogColor.r, fogColor.g, fogColor.b, fogColor.a);
-        	fogColours.flip();
-        	glFog(GL_FOG_COLOR, fogColours);
-        	glFogi(GL_FOG_MODE, GL_LINEAR);
-        	glHint(GL_FOG_HINT, GL_NICEST);
-        	glFogf(GL_FOG_START, fogNear);
-        	glFogf(GL_FOG_END, fogFar);
-        	glFogf(GL_FOG_DENSITY, 0.005f);
-        }
+//        //glEnable(GL_FOG);
+//        
+//        {
+//        	FloatBuffer fogColours = BufferUtils.createFloatBuffer(4);
+//        	fogColours.put(new float[]{fogColor.r, fogColor.g, fogColor.b, fogColor.a});
+//        	glClearColor(fogColor.r, fogColor.g, fogColor.b, fogColor.a);
+//        	fogColours.flip();
+//        	glFog(GL_FOG_COLOR, fogColours);
+//        	glFogi(GL_FOG_MODE, GL_LINEAR);
+//        	glHint(GL_FOG_HINT, GL_NICEST);
+//        	glFogf(GL_FOG_START, fogNear);
+//        	glFogf(GL_FOG_END, fogFar);
+//        	glFogf(GL_FOG_DENSITY, 0.005f);
+//        }
 
 
         while (running) {
@@ -357,7 +357,8 @@ public class Marmelade {
                 running = false;
             }
             
-            System.out.println("X: " + position.x + " Y: " + position.y + " Z: " + position.z);
+            System.out.println("pX: " + position.x + " pY: " + position.y + " pZ: " + position.z + " | " +
+            			       "rX: " + rotation.x + " rY: " + rotation.y + " rZ: " + rotation.z);
         }
         glDeleteTextures(floorTexture);
         glDeleteLists(floorDisplayList, 1);
