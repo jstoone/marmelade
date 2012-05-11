@@ -24,7 +24,9 @@ import com.jakobsteinn.marmelade.utils.*;
  */
 public class ShaderDemo {
 	
-	private static int shaderProgram, bunny, diffuseModifierUniform;
+	private static int shaderProgram, diffuseModifierUniform;
+	// display lists
+	private static int bunny, wall, floor, ceiling;
 	
 	public static final String MODEL_LOCATION = "res/bunny.obj";
 	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
@@ -50,7 +52,17 @@ public class ShaderDemo {
 		setUpShaders();
 		setUpLighting();
 		
+		// draw the different shapes
+		bunny = glGenLists(1);
 		Shapes.draw3DModel(bunny, new File("res/bunny.obj"));
+		
+		ceiling = glGenLists(1);
+		Shapes.drawCeiling(ceiling);
+		
+		wall = glGenLists(1);
+		Shapes.drawWall(wall);
+		
+		
 
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -58,8 +70,11 @@ public class ShaderDemo {
 			cam.applyModelviewMatrix(true);
 			
 			glUseProgram(shaderProgram);
+			
 			glUniform1f(diffuseModifierUniform, 1.5f);
+			
 			glCallList(bunny);
+			
 			glUseProgram(0);
 
 			cam.processMouse(1, 80, -80);
@@ -79,52 +94,6 @@ public class ShaderDemo {
 		System.exit(0);
 	}
 	
-	
-	private static void setUpWallsDisplayList(){
-		
-	}
-	private static void setUpBunnyDisplayList() {
-		bunny = glGenLists(1);
-		glNewList(bunny, GL_COMPILE);
-		{
-			Model m = null;
-			try {
-				m = ObjLoader.loadModel(new File(MODEL_LOCATION));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				Display.destroy();
-				System.exit(1);
-			} catch (IOException e) {
-				e.printStackTrace();
-				Display.destroy();
-				System.exit(1);
-			}
-
-			glColor3f(0.4f, 0.27f, 0.17f);
-			glMaterialf(GL_FRONT, GL_SHININESS, 128.0f);
-
-			glBegin(GL_TRIANGLES);
-			for (Face face : m.faces) {
-				Vector3f n1 = m.normals.get((int) face.normal.x - 1);
-				glNormal3f(n1.x, n1.y, n1.z);
-				Vector3f v1 = m.vertices.get((int) face.vertex.x - 1);
-				glVertex3f(v1.x, v1.y, v1.z);
-				Vector3f n2 = m.normals.get((int) face.normal.y - 1);
-				glNormal3f(n2.x, n2.y, n2.z);
-				Vector3f v2 = m.vertices.get((int) face.vertex.y - 1);
-				glVertex3f(v2.x, v2.y, v2.z);
-				Vector3f n3 = m.normals.get((int) face.normal.z - 1);
-				glNormal3f(n3.x, n3.y, n3.z);
-				Vector3f v3 = m.vertices.get((int) face.vertex.z - 1);
-				glVertex3f(v3.x, v3.y, v3.z);
-			}
-			glEnd();
-
-			glColor3f(1, 1, 1);
-		}
-		glEndList();
-	}
-
 	private static FloatBuffer asFloatBuffer(float... values) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(values.length);
 		buffer.put(values);
