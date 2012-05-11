@@ -15,6 +15,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.jakobsteinn.marmelade.Shapes;
 import com.jakobsteinn.marmelade.utils.*;
 
 /**
@@ -48,7 +49,8 @@ public class ShaderDemo {
 
 		setUpShaders();
 		setUpLighting();
-		setUpDisplayLists();
+		
+		Shapes.draw3DModel(bunny, new File("res/bunny.obj"));
 
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,8 +78,12 @@ public class ShaderDemo {
 		Display.destroy();
 		System.exit(0);
 	}
-
-	private static void setUpDisplayLists() {
+	
+	
+	private static void setUpWallsDisplayList(){
+		
+	}
+	private static void setUpBunnyDisplayList() {
 		bunny = glGenLists(1);
 		glNewList(bunny, GL_COMPILE);
 		{

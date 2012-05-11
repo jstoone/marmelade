@@ -14,25 +14,36 @@ import com.jakobsteinn.marmelade.utils.Model;
 import com.jakobsteinn.marmelade.utils.ObjLoader;
 
 public class Shapes {
+	/* 
+	 * ***********************************************
+	 * ******               BOX                *******
+	 * ***********************************************
+	 */
+		//The width and length of the floor and ceiling. Don't put anything above
+		//1000, or OpenGL will start to freak out, though.
+		// floor area, watch out for the walls, the pic's get tiny
+		//DEFAULT: 10;
+		public static final int gridSize = 10;
+		
+		//The size of tiles, where 0.5 is the standard size. Increasing the size by
+		//results in smaller tiles, and vice versa.
+		//DEFAULT: 0.20f
+		public static final float tileSize = 0.20f;
+	  
+		//The height of the ceiling.
+		//DEFAULT: 10
+		public static final float ceilingHeight = 10f;
+		
+		//The height of the floor.
+		//DEFAULT: -1:
+		public static final float floorHeight = -1;
 	
-	// variables
-	private int gridSize;
-	private float floorHeight;
-	private float ceilingHeight;
-	private float tileSize;
-	
-	// constructor
-	public Shapes(int gridSize,
-			float floorHeight, float ceilingHeight, float tileSize){
-		this.gridSize = gridSize;
-		this.floorHeight = floorHeight;
-		this.ceilingHeight = ceilingHeight;
-		this.tileSize = tileSize;
+	public Shapes(){
 	}
 
 	// basic shapres
 	//TODO: make more
-	public void drawPyramid(int objectDisplayList) {
+	public static void drawPyramid(int objectDisplayList) {
     	glNewList(objectDisplayList, GL_COMPILE);
         {
             double topPoint = 0.75;
@@ -72,12 +83,13 @@ public class Shapes {
 	}
 	
 	// advanced shapes and models
-	public void draw3DModel(int bunnyObjectList, File modelLocation) {
-		glNewList(bunnyObjectList, GL_COMPILE);
+	public static void draw3DModel(int modelObjectList, File modelFileLocation) {
+		modelObjectList = glGenLists(1);
+		glNewList(modelObjectList, GL_COMPILE);
         {
         	Model m = null;
         	try {
-				m = ObjLoader.loadModel(modelLocation);
+				m = ObjLoader.loadModel(modelFileLocation);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				Display.destroy();
@@ -114,54 +126,54 @@ public class Shapes {
 
 
 	// shapes for the box/walls/ceiling/floor etc.
-	public void drawWall(int wallDisplayList) {
+	public static void drawWall(int wallDisplayList) {
 		glNewList(wallDisplayList, GL_COMPILE);
-        glBegin(GL_QUADS);
-	        // North wall
-	        glTexCoord2f(0, 0);
-	        glVertex3f(-gridSize, floorHeight, -gridSize);
-	        glTexCoord2f(0, gridSize * 10 * tileSize);
-	        glVertex3f(gridSize, floorHeight, -gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-	        glVertex3f(gridSize, ceilingHeight, -gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, 0);
-	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-	        
-	        // West wall
-	        glTexCoord2f(0, 0);
-	        glVertex3f(-gridSize, floorHeight, -gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, 0);
-	        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-	        glTexCoord2f(0, gridSize * 10 * tileSize);
-	        glVertex3f(-gridSize, floorHeight, +gridSize);
-	
-	        // East wall
-	        glTexCoord2f(0, 0);
-	        glVertex3f(+gridSize, floorHeight, -gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, 0);
-	        glVertex3f(+gridSize, floorHeight, +gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-	        glTexCoord2f(0, gridSize * 10 * tileSize);
-	        glVertex3f(+gridSize, ceilingHeight, -gridSize);
-	
-	        // South wall
-	        glTexCoord2f(0, 0);
-	        glVertex3f(-gridSize, floorHeight, +gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, 0);
-	        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-	        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-	        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-	        glTexCoord2f(0, gridSize * 10 * tileSize);
-	        glVertex3f(+gridSize, floorHeight, +gridSize);
-        glEnd();
-    glEndList();
+        	glBegin(GL_QUADS);
+		        // North wall
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		        
+		        // West wall
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(-gridSize, floorHeight, +gridSize);
+		
+		        // East wall
+		        glTexCoord2f(0, 0);
+		        glVertex3f(+gridSize, floorHeight, -gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(+gridSize, floorHeight, +gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(+gridSize, ceilingHeight, -gridSize);
+		
+		        // South wall
+		        glTexCoord2f(0, 0);
+		        glVertex3f(-gridSize, floorHeight, +gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, 0);
+		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
+		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
+		        glTexCoord2f(0, gridSize * 10 * tileSize);
+		        glVertex3f(+gridSize, floorHeight, +gridSize);
+	        glEnd();
+        glEndList();
 		
 	}
 
-	public void drawFloor(int floorDisplayList) {
+	public static void drawFloor(int floorDisplayList) {
 		glNewList(floorDisplayList, GL_COMPILE);
         	glBegin(GL_QUADS);
 		        glTexCoord2f(0, 0);
@@ -177,7 +189,7 @@ public class Shapes {
 		
 	}
 
-	public void drawSeiling(int ceilingDisplayList) {
+	public static void drawSeiling(int ceilingDisplayList) {
 		glNewList(ceilingDisplayList, GL_COMPILE);
 	        glBegin(GL_QUADS);
 		        glTexCoord2f(0, 0);

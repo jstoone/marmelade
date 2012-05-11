@@ -113,30 +113,6 @@ public class Marmelade {
 	
 	/* 
 	 * ***********************************************
-	 * ******               BOX                *******
-	 * ***********************************************
-	 */
-		//The width and length of the floor and ceiling. Don't put anything above
-		//1000, or OpenGL will start to freak out, though.
-		// floor area, watch out for the walls, the pic's get tiny
-		//DEFAULT: 10;
-		public static final int gridSize = 10;
-		
-		//The size of tiles, where 0.5 is the standard size. Increasing the size by
-		//results in smaller tiles, and vice versa.
-		//DEFAULT: 0.20f
-		public static final float tileSize = 0.20f;
-	  
-		//The height of the ceiling.
-		//DEFAULT: 10
-		public static final float ceilingHeight = 10f;
-		
-		//The height of the floor.
-		//DEFAULT: -1:
-		public static final float floorHeight = -1;
-		  
-	/* 
-	 * ***********************************************
 	 * ******               FOG                *******
 	 * ***********************************************
 	 */
@@ -174,9 +150,6 @@ public class Marmelade {
 	/*
 	 *  END OF CONFIG
 	 */
-	
-	// init all the shapes that can be drawn
-	private static Shapes shapes = new Shapes(gridSize,	floorHeight, ceilingHeight, tileSize);
 	
 	// init the mouse and keyboard handler
 	private static InputHandler inputHandler = new InputHandler(walkingSpeed, mouseSpeed, position, rotation);
@@ -236,23 +209,23 @@ public class Marmelade {
         
         // draw the ceiling
         int ceilingDisplayList = glGenLists(1);
-        shapes.drawSeiling(ceilingDisplayList);
+        Shapes.drawSeiling(ceilingDisplayList);
 
         // draw the wall
         int wallDisplayList = glGenLists(1);
-        shapes.drawWall(wallDisplayList);
+        Shapes.drawWall(wallDisplayList);
 
         // draw the floor
         int floorDisplayList = glGenLists(1);
-        shapes.drawFloor(floorDisplayList);
+        Shapes.drawFloor(floorDisplayList);
 
         // draw the pyramid!
         int objectDisplayList = glGenLists(1);
-        shapes.drawPyramid(objectDisplayList);
+        Shapes.drawPyramid(objectDisplayList);
         
         // draw 3d model! (bunny)
         int bunnyObjectList = glGenLists(1);
-        shapes.draw3DModel(bunnyObjectList, new File("res/bunny.obj"));
+        Shapes.draw3DModel(bunnyObjectList, new File("res/bunny.obj"));
 
         // prepare for fps counting!
         getDelta();
