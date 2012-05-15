@@ -242,7 +242,7 @@ public class InputHandler {
 						glLoadIdentity();
 					}
 				} catch (LWJGLException ex) {
-					Logger.getLogger(Marmelade.class.getName()).log(
+					Logger.getLogger(MarmeladeOld.class.getName()).log(
 							Level.SEVERE, null, ex);
 				}
 			}
