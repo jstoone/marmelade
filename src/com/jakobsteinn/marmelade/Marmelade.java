@@ -63,7 +63,7 @@ public class Marmelade {
 		
 		// draw the different shapes
 		bunny = glGenLists(1);
-		Shapes.draw3DModel(bunny, new File("res/bunny.obj"));
+		Shapes.draw3DModel(bunny, new File("res/stanford-bunny.obj"));
 		
 		ceiling = glGenLists(1);
 		Shapes.drawCeiling(ceiling);
