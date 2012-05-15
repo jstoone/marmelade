@@ -17,6 +17,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.jakobsteinn.marmelade.test.MarmeladeOld;
+
 public class InputHandler {
 
 	Vector3f position;
