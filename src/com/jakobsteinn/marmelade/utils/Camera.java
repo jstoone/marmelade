@@ -105,14 +105,14 @@ public class Camera {
         if (keyUp && keyLeft && !keyRight && !keyDown) {
         	moveFromLook(-speedX * delta, 0, -speedZ * delta);
         }
-        if (keyUp && !keyLeft && !keyRight && !keyDown) {
-        	moveFromLook(0, 0, -speedZ * delta);
-        }
         if (keyDown && keyLeft && !keyRight && !keyUp) {
         	moveFromLook(-speedX * delta, 0, speedZ * delta);
         }
         if (keyDown && keyRight && !keyLeft && !keyUp) {
         	moveFromLook(speedX * delta, 0, speedZ * delta);
+        }
+        if (keyUp && !keyLeft && !keyRight && !keyDown) {
+        	moveFromLook(0, 0, -speedZ * delta);
         }
         if (keyDown && !keyUp && !keyLeft && !keyRight) {
         	moveFromLook(0, 0, speedZ * delta);
@@ -124,10 +124,14 @@ public class Camera {
         	moveFromLook(speedX * delta, 0, 0);
         }
         if (flyUp && !flyDown) {
-			y += speedY * delta;
+        	if(getY() < 10){
+        		y += speedY * delta;
+        	}
 		}
 		if (flyDown && !flyUp) {
-			y -= speedY * delta;
+			if(getY() > 0){
+				y -= speedY * delta;
+			}
 		}
 		
 		

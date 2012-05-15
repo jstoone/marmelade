@@ -32,15 +32,15 @@ public class Marmelade {
 	// display lists
 	private static int bunny, wall, floor, ceiling, texture;
 	
-	public static final String MODEL_LOCATION = "res/bunny.obj";
+	public static final String MODEL_LOCATION = "res/stanford-bunny.model";
 	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
 	public static final String FRAGMENT_SHADER_LOCATION = "res/specular_lighting.frag";
-
+	
 	public static void main(String[] args) {
 		try {
 			Display.setDisplayMode(new DisplayMode(1024, 768));
 			Display.setVSyncEnabled(true);
-			Display.setTitle("Shader Demo");
+			Display.setTitle("Marmelade dev-0.4");
 			Display.create();
 		} catch (LWJGLException e) {
 			System.err.println("The display wasn't initialized correctly. :(");
@@ -49,7 +49,7 @@ public class Marmelade {
 		}
 
 		Camera cam = new Camera((float) Display.getWidth()
-				/ (float) Display.getHeight(), -2.19f, 1.36f, 11.45f);
+				/ (float) Display.getHeight(), 0.0f, 0.0f, 7.0f);
 		cam.setFov(60);
 		cam.applyProjectionMatrix();
 		
@@ -63,7 +63,7 @@ public class Marmelade {
 		
 		// draw the different shapes
 		bunny = glGenLists(1);
-		Shapes.draw3DModel(bunny, new File("res/stanford-bunny.model"));
+		Shapes.draw3DModel(bunny, new File(MODEL_LOCATION));
 		
 		ceiling = glGenLists(1);
 		Shapes.drawCeiling(ceiling);
@@ -102,6 +102,7 @@ public class Marmelade {
 
 			Display.update();
 			Display.sync(60);
+			System.out.println("X: " + cam.getX() + " Y: " + cam.getY() + " Z: " + cam.getZ());
 		}
 		glDeleteProgram(shaderProgram);
 		glDeleteLists(bunny, 1);
@@ -111,6 +112,7 @@ public class Marmelade {
 		
 		Display.destroy();
 		System.exit(0);
+		
 	}
 	
 	private static void setUpTextures(int texture) {
@@ -151,7 +153,7 @@ public class Marmelade {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[] {0.2f, 0.05f, 0.2f, 1f}));
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, asFloatBuffer(new float[] {0.05f, 0.05f, 0.05f, 1f}));
 		glLight(GL_LIGHT0, GL_POSITION, asFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f, 1.0f }));
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
