@@ -4,7 +4,10 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
+
+import com.jakobsteinn.marmelade.Marmelade;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -134,7 +137,16 @@ public class Camera {
 			}
 		}
 		
-		
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+            if (!Mouse.isGrabbed() || Display.isFullscreen()) {
+                Marmelade.running = false;
+            } else {
+                Mouse.setGrabbed(false);
+            }
+        }
+		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+			
+        }
 		
     }
     

@@ -18,6 +18,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
+import com.jakobsteinn.marmelade.shapes.Sphere;
 import com.jakobsteinn.marmelade.utils.*;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
@@ -28,10 +29,12 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
  * @author Oskar Veerhoek
  */
 public class Marmelade {
+	public static boolean running = true;
+	
 	private static int shaderProgram, diffuseModifierUniform;
 	
 	// display lists
-	private static int bunny, wall, floor, ceiling, box, texture;
+	private static int wallObjList, floorObjList, ceilingObjList, sphereObjList, textureObjList;
 	
 	public static final String MODEL_LOCATION = "res/stanford-bunny.model";
 	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
@@ -61,30 +64,27 @@ public class Marmelade {
 		setUpLighting();
 		
 		// draw the textures
-		texture = glGenTextures();
-		setUpTextures(texture);
+		textureObjList = glGenTextures();
+		setUpTextures(textureObjList);
 		
 		
-		ceiling = glGenLists(1);
-		Shapes.drawCeiling(ceiling);
+		ceilingObjList = glGenLists(1);
+		Shapes.drawCeiling(ceilingObjList);
 		
-		wall = glGenLists(1);
-		Shapes.drawWall(wall);
+		wallObjList = glGenLists(1);
+		Shapes.drawWall(wallObjList);
 		
-		floor = glGenLists(1);
-		Shapes.drawFloor(floor);
+		floorObjList = glGenLists(1);
+		Shapes.drawFloor(floorObjList);
 		
-		// draw the different shapes
-//		bunny = glGenLists(1);
-//		Shapes.draw3DModel(bunny, new File(MODEL_LOCATION));
-		
-		// draw the 3D box
-		box = glGenLists(1);
-		Shapes.drawBox(box);
+		sphereObjList = glGenLists(1);
+		Sphere sphere = new Sphere();
+		sphere.setShowBox(true);
+		sphere.drawSphere(sphereObjList, 1.0f, 20, 16);
 
-		while (!Display.isCloseRequested()) {
+		while (running || !Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glBindTexture(GL_TEXTURE_2D, texture);
+			glBindTexture(GL_TEXTURE_2D, textureObjList);
 
 			cam.applyModelviewMatrix(true);
 			
@@ -92,14 +92,11 @@ public class Marmelade {
 			
 			glUniform1f(diffuseModifierUniform, 1.5f);
 			
-//			glCallList(bunny);
-			glPushMatrix();
-				glDisable(GL_CULL_FACE);
-				glCallList(box);
-			glPopMatrix();
-			glCallList(ceiling);
-			glCallList(wall);
-			glCallList(floor);
+			glCallList(sphereObjList);
+			
+			glCallList(ceilingObjList);
+			glCallList(wallObjList);
+			glCallList(floorObjList);
 			
 			glUseProgram(0);
 
@@ -113,14 +110,12 @@ public class Marmelade {
 
 			Display.update();
 			Display.sync(60);
-			System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
+			//System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
 		}
 		glDeleteProgram(shaderProgram);
-//		glDeleteLists(bunny, 1);
-		glDeleteLists(box, 1);
-		glDeleteLists(ceiling, 1);
-		glDeleteLists(wall, 1);
-		glDeleteLists(floor, 1);
+		glDeleteLists(ceilingObjList, 1);
+		glDeleteLists(wallObjList, 1);
+		glDeleteLists(floorObjList, 1);
 		
 		Display.destroy();
 		System.exit(0);
