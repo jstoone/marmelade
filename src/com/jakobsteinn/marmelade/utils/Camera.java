@@ -6,6 +6,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.glu.GLU;
 
+import com.jakobsteinn.marmelade.Shapes;
+
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -24,6 +26,7 @@ public class Camera {
     protected float aspectRatio;
     protected float zNear = 0.3f;
     protected float zFar = 100f;
+    protected float border = Shapes.gridSize - 1;
 
     public Camera(float aspectRatio) {
         this.aspectRatio = aspectRatio;
@@ -100,7 +103,7 @@ public class Camera {
         boolean flyDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
         
         if (keyUp && keyRight && !keyLeft && !keyDown) {
-            moveFromLook(speedX * delta, 0, -speedZ * delta);
+        	moveFromLook(speedX * delta, 0, -speedZ * delta);
         }
         if (keyUp && keyLeft && !keyRight && !keyDown) {
         	moveFromLook(-speedX * delta, 0, -speedZ * delta);
@@ -115,7 +118,7 @@ public class Camera {
         	moveFromLook(0, 0, -speedZ * delta);
         }
         if (keyDown && !keyUp && !keyLeft && !keyRight) {
-        	moveFromLook(0, 0, speedZ * delta);
+    		moveFromLook(0, 0, speedZ * delta);
         }
         if (keyLeft && !keyRight && !keyUp && !keyDown) {
         	moveFromLook(-speedX * delta, 0, 0);
@@ -124,7 +127,7 @@ public class Camera {
         	moveFromLook(speedX * delta, 0, 0);
         }
         if (flyUp && !flyDown) {
-        	if(getY() < 10){
+        	if(getY() < border){
         		y += speedY * delta;
         	}
 		}
@@ -133,9 +136,6 @@ public class Camera {
 				y -= speedY * delta;
 			}
 		}
-		
-		
-		
     }
     
     public void moveFromLook(float dx, float dy, float dz) {
