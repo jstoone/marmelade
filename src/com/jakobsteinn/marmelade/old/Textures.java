@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade.test;
+package com.jakobsteinn.marmelade.old;
 
 import static org.lwjgl.opengl.GL11.*;
 

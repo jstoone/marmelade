@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade.test;
+package com.jakobsteinn.marmelade.old;
 
 import java.io.File;
 import java.nio.FloatBuffer;
