@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade;
+package com.jakobsteinn.marmelade.test;
 
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
@@ -17,7 +17,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.jakobsteinn.marmelade.test.MarmeladeOld;
 
 public class InputHandler {
 

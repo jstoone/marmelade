@@ -16,9 +16,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.jakobsteinn.marmelade.InputHandler;
 import com.jakobsteinn.marmelade.Shapes;
-import com.jakobsteinn.marmelade.Textures;
 
 /**
 * A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
