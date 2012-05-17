@@ -23,7 +23,7 @@ public class Shapes {
 		//1000, or OpenGL will start to freak out, though.
 		// floor area, watch out for the walls, the pic's get tiny
 		//DEFAULT: 10;
-		public static final int gridSize = 10;
+		public static final int gridSize = 20;
 		
 		//The size of tiles, where 0.5 is the standard size. Increasing the size by
 		//results in smaller tiles, and vice versa.
@@ -32,7 +32,7 @@ public class Shapes {
 	  
 		//The height of the ceiling.
 		//DEFAULT: 10
-		public static final float ceilingHeight = 10f;
+		public static final float ceilingHeight = gridSize;
 		
 		//The height of the floor.
 		//DEFAULT: -1:
@@ -81,6 +81,59 @@ public class Shapes {
         }
         glEndList();
 		
+	}
+	
+	public static void drawBox(int boxDisplayList){
+		glNewList(boxDisplayList, GL_COMPILE);
+		{
+			// draw quads
+	        // + float color (red)
+	        glBegin(GL_QUADS);
+	        									// FRONT
+	        	glColor3f(0.0f, 1.0f, 0.0f);	// green
+	        	glVertex3f(-1.0f,  1.0f, 1.0f); // upper-left
+	        	glVertex3f( 1.0f,  1.0f, 1.0f); // upper-right
+	        	glVertex3f( 1.0f, -1.0f, 1.0f); // lower-right
+	        	glVertex3f(-1.0f, -1.0f, 1.0f);	// lower-left
+	        	
+	        									// BACK
+	        	glColor3f(  1.0f,  0.0f,  0.0f);// red
+	        	glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left (right seen form rotation=180)
+	        	glVertex3f( 1.0f,  1.0f, -1.0f);// upper-right (left seen form rotation=180)
+	        	glVertex3f( 1.0f, -1.0f, -1.0f);// lower-right (left seen from rotation=180)
+	        	glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left (right seen form rotation=180)
+	        	
+	        									// LEFT
+	        	glColor3f(  0.0f,  0.0f,  1.0f);// blue
+	        	glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left
+	        	glVertex3f(-1.0f,  1.0f,  1.0f);// upper-right
+	        	glVertex3f(-1.0f, -1.0f,  1.0f);// lower-right
+	        	glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left
+	        	
+	        									// RIGHT
+	        	glColor3f( 1.0f,  0.0f,  1.0f);	// purple
+	        	glVertex3f(1.0f,  1.0f,  1.0f); // upper-left
+	        	glVertex3f(1.0f,  1.0f, -1.0f);	// upper-right
+	        	glVertex3f(1.0f, -1.0f, -1.0f);	// lower-right
+	        	glVertex3f(1.0f, -1.0f,  1.0f); // lower-left
+	        	
+	        									// TOP
+	        	glColor3f(  1.0f, 1.0f,  0.0f);	// yellow
+	        	glVertex3f(-1.0f, 1.0f, -1.0f);	// upper-left
+	        	glVertex3f( 1.0f, 1.0f, -1.0f); // upper-right
+	        	glVertex3f( 1.0f, 1.0f,  1.0f); // lower-right
+	        	glVertex3f(-1.0f, 1.0f,  1.0f); // lower-left
+	        	
+	        									// BOTTUM
+	        	glColor3f(  0.0f,  1.0f,  1.0f);// light-blue 
+	        	glVertex3f(-1.0f, -1.0f, -1.0f);// upper-left
+	        	glVertex3f( 1.0f, -1.0f, -1.0f);// upper-right
+	        	glVertex3f( 1.0f, -1.0f,  1.0f);// lower-right
+	        	glVertex3f(-1.0f, -1.0f,  1.0f);// lower-left
+	        glEnd();
+	        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+		glEndList();
 	}
 	
 	// advanced shapes and models

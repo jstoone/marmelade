@@ -16,6 +16,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 
 import com.jakobsteinn.marmelade.utils.*;
 
@@ -30,7 +31,7 @@ public class Marmelade {
 	private static int shaderProgram, diffuseModifierUniform;
 	
 	// display lists
-	private static int bunny, wall, floor, ceiling, texture;
+	private static int bunny, wall, floor, ceiling, box, texture;
 	
 	public static final String MODEL_LOCATION = "res/stanford-bunny.model";
 	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
@@ -41,7 +42,10 @@ public class Marmelade {
 			Display.setDisplayMode(new DisplayMode(1024, 768));
 			Display.setVSyncEnabled(true);
 			Display.setTitle("Marmelade dev-0.4");
-			Display.create();
+			Display.create(new PixelFormat(8,	// 8 bits for alpha buffer
+										   8,
+										   8	// 8 bits for stensil buffer
+										   ));
 		} catch (LWJGLException e) {
 			System.err.println("The display wasn't initialized correctly. :(");
 			Display.destroy();
@@ -53,7 +57,6 @@ public class Marmelade {
 		cam.setFov(60);
 		cam.applyProjectionMatrix();
 		
-		
 		setUpShaders();
 		setUpLighting();
 		
@@ -61,9 +64,6 @@ public class Marmelade {
 		texture = glGenTextures();
 		setUpTextures(texture);
 		
-		// draw the different shapes
-		bunny = glGenLists(1);
-		Shapes.draw3DModel(bunny, new File(MODEL_LOCATION));
 		
 		ceiling = glGenLists(1);
 		Shapes.drawCeiling(ceiling);
@@ -74,6 +74,13 @@ public class Marmelade {
 		floor = glGenLists(1);
 		Shapes.drawFloor(floor);
 		
+		// draw the different shapes
+//		bunny = glGenLists(1);
+//		Shapes.draw3DModel(bunny, new File(MODEL_LOCATION));
+		
+		// draw the 3D box
+		box = glGenLists(1);
+		Shapes.drawBox(box);
 
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -85,7 +92,11 @@ public class Marmelade {
 			
 			glUniform1f(diffuseModifierUniform, 1.5f);
 			
-			glCallList(bunny);
+//			glCallList(bunny);
+			glPushMatrix();
+				glDisable(GL_CULL_FACE);
+				glCallList(box);
+			glPopMatrix();
 			glCallList(ceiling);
 			glCallList(wall);
 			glCallList(floor);
@@ -102,10 +113,11 @@ public class Marmelade {
 
 			Display.update();
 			Display.sync(60);
-			System.out.println("X: " + cam.getX() + " Y: " + cam.getY() + " Z: " + cam.getZ());
+			System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
 		}
 		glDeleteProgram(shaderProgram);
-		glDeleteLists(bunny, 1);
+//		glDeleteLists(bunny, 1);
+		glDeleteLists(box, 1);
 		glDeleteLists(ceiling, 1);
 		glDeleteLists(wall, 1);
 		glDeleteLists(floor, 1);
