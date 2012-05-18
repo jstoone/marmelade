@@ -22,7 +22,8 @@ public class World {
 	public static final String FRAGMENT_SHADER_LOCATION = "res/specular_lighting.frag";
 	
 	// Shapes
+	public static boolean WIREFRAME_MODE;
+	
 	public static Sphere sphere;
 	public static Level level;
-
 }

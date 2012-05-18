@@ -12,7 +12,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.PixelFormat;
 
 import com.jakobsteinn.marmelade.shapes.*;
 import com.jakobsteinn.marmelade.utils.*;
@@ -31,10 +30,7 @@ public class Marmelade {
 			Display.setDisplayMode(new DisplayMode(1024, 768));
 			Display.setVSyncEnabled(true);
 			Display.setTitle("Marmelade dev-0.4");
-			Display.create(new PixelFormat(8,	// 8 bits for alpha buffer
-										   8,
-										   8	// 8 bits for stensil buffer
-										   ));
+			Display.create();
 		} catch (LWJGLException e) {
 			System.err.println("The display wasn't initialized correctly. :(");
 			Display.destroy();
@@ -67,10 +63,9 @@ public class Marmelade {
 		level.drawFloor(floorDisplayList);
 		
 		sphereObjList = glGenLists(1);
-		sphere.setShowBox(true);
 		sphere.drawSphere(sphereObjList, 1.0f, 20, 16);
 
-		while (running || !Display.isCloseRequested()) {
+		while (running && !Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindTexture(GL_TEXTURE_2D, textureDisplayList);
 

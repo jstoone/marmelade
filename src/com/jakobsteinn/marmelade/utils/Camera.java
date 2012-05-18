@@ -7,7 +7,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 
-import com.jakobsteinn.marmelade.Marmelade;
+import com.jakobsteinn.marmelade.World;
+import com.jakobsteinn.marmelade.shapes.Sphere;
+
+import static com.jakobsteinn.marmelade.World.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -139,14 +142,22 @@ public class Camera {
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             if (!Mouse.isGrabbed() || Display.isFullscreen()) {
-                Marmelade.running = false;
+                running = false;
             } else {
                 Mouse.setGrabbed(false);
             }
         }
-		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
-			
-        }
+		if (Keyboard.next()){
+			if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+				if(Sphere.showWire == false){
+					System.out.println("SHOW_WIREFRAME is ACTIVATED.");
+					Sphere.showWire = true;
+				}else if(Sphere.showWire == true){
+					System.out.println("SHOW_WIREFRAME is DEACTIVATED.");
+					Sphere.showWire = false;
+				}
+			}
+		}
 		
     }
     
