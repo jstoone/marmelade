@@ -16,7 +16,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.jakobsteinn.marmelade.Shapes;
+import com.jakobsteinn.marmelade.shapes.*;
 
 /**
 * A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
@@ -147,6 +147,15 @@ public class MarmeladeOld {
         		
         // light color
         private static float[] lightColor = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+        
+    /* 
+	 * ***********************************************
+	 * ******               SHAPES             *******
+	 * ***********************************************
+	 */
+        private static Pyramid pyramid;
+        private static Level level;
+        private static Model3D model3D;
 
 		
 	/*
@@ -203,31 +212,36 @@ public class MarmeladeOld {
         gluPerspective(fov, (float) Display.getWidth() / (float) Display.getHeight(), zNear, zFar);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
+        
+        // do shapes
+        pyramid = new Pyramid();
+        level = new Level();
+        model3D = new Model3D();
 
 
         // generate the texture for the floor, walls and ceiling
         int floorTexture = glGenTextures();
-        Textures.genBoxTextures(floorTexture);
+        level.genTextures(floorTexture);
         
         // draw the ceiling
         int ceilingDisplayList = glGenLists(1);
-        Shapes.drawCeiling(ceilingDisplayList);
+        level.drawCeiling(ceilingDisplayList);
 
         // draw the wall
         int wallDisplayList = glGenLists(1);
-        Shapes.drawWall(wallDisplayList);
+        level.drawWall(wallDisplayList);
 
         // draw the floor
         int floorDisplayList = glGenLists(1);
-        Shapes.drawFloor(floorDisplayList);
+        level.drawFloor(floorDisplayList);
 
         // draw the pyramid!
         int objectDisplayList = glGenLists(1);
-        Shapes.drawPyramid(objectDisplayList);
+        pyramid.draw(objectDisplayList);
         
         // draw 3d model! (bunny)
         int bunnyObjectList = glGenLists(1);
-        Shapes.draw3DModel(bunnyObjectList, new File("res/bunny.obj"));
+        model3D.draw(bunnyObjectList, new File("res/stanford-bunny.model"));
 
         // prepare for fps counting!
         getDelta();

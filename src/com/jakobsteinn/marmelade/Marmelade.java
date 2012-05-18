@@ -3,11 +3,7 @@ package com.jakobsteinn.marmelade;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
@@ -18,8 +14,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
-import com.jakobsteinn.marmelade.shapes.Sphere;
+import com.jakobsteinn.marmelade.shapes.*;
 import com.jakobsteinn.marmelade.utils.*;
+import static com.jakobsteinn.marmelade.World.*;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
@@ -29,17 +26,6 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
  * @author Oskar Veerhoek
  */
 public class Marmelade {
-	public static boolean running = true;
-	
-	private static int shaderProgram, diffuseModifierUniform;
-	
-	// display lists
-	private static int wallObjList, floorObjList, ceilingObjList, sphereObjList, textureObjList;
-	
-	public static final String MODEL_LOCATION = "res/stanford-bunny.model";
-	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
-	public static final String FRAGMENT_SHADER_LOCATION = "res/specular_lighting.frag";
-	
 	public static void main(String[] args) {
 		try {
 			Display.setDisplayMode(new DisplayMode(1024, 768));
@@ -62,29 +48,31 @@ public class Marmelade {
 		
 		setUpShaders();
 		setUpLighting();
+
+		// do shapes
+		level = new Level();
+		sphere = new Sphere();
 		
 		// draw the textures
-		textureObjList = glGenTextures();
-		setUpTextures(textureObjList);
+		textureDisplayList = glGenTextures();
+		setUpTextures(textureDisplayList);
 		
+		ceilingDisplayList = glGenLists(1);
+		level.drawCeiling(ceilingDisplayList);
 		
-		ceilingObjList = glGenLists(1);
-		Shapes.drawCeiling(ceilingObjList);
+		wallDisplayList = glGenLists(1);
+		level.drawWall(wallDisplayList);
 		
-		wallObjList = glGenLists(1);
-		Shapes.drawWall(wallObjList);
-		
-		floorObjList = glGenLists(1);
-		Shapes.drawFloor(floorObjList);
+		floorDisplayList = glGenLists(1);
+		level.drawFloor(floorDisplayList);
 		
 		sphereObjList = glGenLists(1);
-		Sphere sphere = new Sphere();
 		sphere.setShowBox(true);
 		sphere.drawSphere(sphereObjList, 1.0f, 20, 16);
 
 		while (running || !Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glBindTexture(GL_TEXTURE_2D, textureObjList);
+			glBindTexture(GL_TEXTURE_2D, textureDisplayList);
 
 			cam.applyModelviewMatrix(true);
 			
@@ -94,9 +82,9 @@ public class Marmelade {
 			
 			glCallList(sphereObjList);
 			
-			glCallList(ceilingObjList);
-			glCallList(wallObjList);
-			glCallList(floorObjList);
+			glCallList(ceilingDisplayList);
+			glCallList(wallDisplayList);
+			glCallList(floorDisplayList);
 			
 			glUseProgram(0);
 
@@ -113,9 +101,9 @@ public class Marmelade {
 			//System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
 		}
 		glDeleteProgram(shaderProgram);
-		glDeleteLists(ceilingObjList, 1);
-		glDeleteLists(wallObjList, 1);
-		glDeleteLists(floorObjList, 1);
+		glDeleteLists(ceilingDisplayList, 1);
+		glDeleteLists(wallDisplayList, 1);
+		glDeleteLists(floorDisplayList, 1);
 		
 		Display.destroy();
 		System.exit(0);
