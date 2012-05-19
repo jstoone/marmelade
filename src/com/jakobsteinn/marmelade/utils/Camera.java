@@ -147,18 +147,6 @@ public class Camera {
                 Mouse.setGrabbed(false);
             }
         }
-		if (Keyboard.next()){
-			if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-				if(Sphere.showWire == false){
-					System.out.println("SHOW_WIREFRAME is ACTIVATED.");
-					Sphere.showWire = true;
-				}else if(Sphere.showWire == true){
-					System.out.println("SHOW_WIREFRAME is DEACTIVATED.");
-					Sphere.showWire = false;
-				}
-			}
-		}
-		
     }
     
     public void moveFromLook(float dx, float dy, float dz) {

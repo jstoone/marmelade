@@ -2,8 +2,7 @@ package com.jakobsteinn.marmelade;
 
 import java.io.File;
 
-import com.jakobsteinn.marmelade.shapes.Level;
-import com.jakobsteinn.marmelade.shapes.Sphere;
+import com.jakobsteinn.marmelade.shapes.*;
 
 public class World {
 	
@@ -22,8 +21,14 @@ public class World {
 	public static final String FRAGMENT_SHADER_LOCATION = "res/specular_lighting.frag";
 	
 	// Shapes
-	public static boolean WIREFRAME_MODE;
+	public static boolean WIREFRAME_MODE = false;
 	
 	public static Sphere sphere;
 	public static Level level;
+	public static Box box;
+	
+	public static boolean isWIREFRAME_MODE() {
+		return WIREFRAME_MODE;
+	}
+	
 }

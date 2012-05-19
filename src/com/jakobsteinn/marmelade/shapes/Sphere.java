@@ -7,18 +7,20 @@ import com.jakobsteinn.marmelade.World;
 public class Sphere {
 	
 	private static org.lwjgl.util.glu.Sphere sphere = new org.lwjgl.util.glu.Sphere();
-	public static boolean showWire = World.WIREFRAME_MODE;
+	public static boolean showWire = World.isWIREFRAME_MODE();
 	
-	public void drawSphere(int sphereObjectList, float radius, int slices, int stacks){
+	public void draw(int sphereObjectList, float radius, int slices, int stacks){
 		glNewList(sphereObjectList, GL_COMPILE);
+			glColor3f(1.0f, 0.0f, 1.0f);
 			sphere.draw(radius, slices, stacks);
 			
-			if(showWire == false){
+			if(showWire == true){
 				System.out.println("The wireframe is ACTIVATED.");
 				drawWireframe();
-			}else if(showWire == true){
+			}else if(showWire == false){
 				System.out.println("The Wireframe is DEACTIVATED.");
 			}
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glEndList();
 	}
 	

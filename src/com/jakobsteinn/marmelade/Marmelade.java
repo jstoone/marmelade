@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL20.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -38,7 +39,7 @@ public class Marmelade {
 		}
 
 		Camera cam = new Camera((float) Display.getWidth()
-				/ (float) Display.getHeight(), 0.0f, 0.0f, 7.0f);
+				/ (float) Display.getHeight(), 0.0f, 0.0f, 0.0f);
 		cam.setFov(60);
 		cam.applyProjectionMatrix();
 		
@@ -48,6 +49,8 @@ public class Marmelade {
 		// do shapes
 		level = new Level();
 		sphere = new Sphere();
+		box = new Box();
+		
 		
 		// draw the textures
 		textureDisplayList = glGenTextures();
@@ -62,10 +65,62 @@ public class Marmelade {
 		floorDisplayList = glGenLists(1);
 		level.drawFloor(floorDisplayList);
 		
-		sphereObjList = glGenLists(1);
-		sphere.drawSphere(sphereObjList, 1.0f, 20, 16);
-
+		int size = 10;
+		IntBuffer lists = BufferUtils.createIntBuffer(size);
+		sphereObjList = glGenLists(size);
+		
+		for(int i = 0; i < size; i++){
+			glNewList(sphereObjList+i, GL_COMPILE);
+			glPushMatrix();
+			glColor3f(0.0f+i, 0.0f+i, 0.0f+i);
+			glDisable(GL_CULL_FACE);
+			glTranslatef(1.0f*i, 1.0f, 1.0f);
+			glBegin(GL_QUADS);
+				// FRONT
+				glVertex3f(-1.0f,  1.0f, 1.0f); // upper-left
+				glVertex3f( 1.0f,  1.0f, 1.0f); // upper-right
+				glVertex3f( 1.0f, -1.0f, 1.0f); // lower-right
+				glVertex3f(-1.0f, -1.0f, 1.0f);	// lower-left
+				
+				// BACK
+				glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left (right seen form rotation=180)
+				glVertex3f( 1.0f,  1.0f, -1.0f);// upper-right (left seen form rotation=180)
+				glVertex3f( 1.0f, -1.0f, -1.0f);// lower-right (left seen from rotation=180)
+				glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left (right seen form rotation=180)
+				
+				// LEFT
+				glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left
+				glVertex3f(-1.0f,  1.0f,  1.0f);// upper-right
+				glVertex3f(-1.0f, -1.0f,  1.0f);// lower-right
+				glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left
+				
+				// RIGHT
+				glVertex3f(1.0f,  1.0f,  1.0f); // upper-left
+				glVertex3f(1.0f,  1.0f, -1.0f);	// upper-right
+				glVertex3f(1.0f, -1.0f, -1.0f);	// lower-right
+				glVertex3f(1.0f, -1.0f,  1.0f); // lower-left
+				
+				// TOP
+				glVertex3f(-1.0f, 1.0f, -1.0f);	// upper-left
+				glVertex3f( 1.0f, 1.0f, -1.0f); // upper-right
+				glVertex3f( 1.0f, 1.0f,  1.0f); // lower-right
+				glVertex3f(-1.0f, 1.0f,  1.0f); // lower-left
+				
+				// BOTTUM
+				glVertex3f(-1.0f, -1.0f, -1.0f);// upper-left
+				glVertex3f( 1.0f, -1.0f, -1.0f);// upper-right
+				glVertex3f( 1.0f, -1.0f,  1.0f);// lower-right
+				glVertex3f(-1.0f, -1.0f,  1.0f);// lower-left
+			glEnd();
+			glPopMatrix();
+			glEndList();
+			lists.put(i);
+		}
+		lists.flip();
+		
+		
 		while (running && !Display.isCloseRequested()) {
+			glLoadIdentity();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindTexture(GL_TEXTURE_2D, textureDisplayList);
 
@@ -75,11 +130,12 @@ public class Marmelade {
 			
 			glUniform1f(diffuseModifierUniform, 1.5f);
 			
-			glCallList(sphereObjList);
-			
 			glCallList(ceilingDisplayList);
 			glCallList(wallDisplayList);
 			glCallList(floorDisplayList);
+			
+			glListBase(sphereObjList);
+			glCallLists(lists);
 			
 			glUseProgram(0);
 
@@ -99,6 +155,7 @@ public class Marmelade {
 		glDeleteLists(ceilingDisplayList, 1);
 		glDeleteLists(wallDisplayList, 1);
 		glDeleteLists(floorDisplayList, 1);
+		glDeleteLists(sphereObjList, 3);
 		
 		Display.destroy();
 		System.exit(0);
