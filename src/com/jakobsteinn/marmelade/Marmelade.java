@@ -72,46 +72,35 @@ public class Marmelade {
 		for(int i = 0; i < size; i++){
 			glNewList(sphereObjList+i, GL_COMPILE);
 			glPushMatrix();
-			glColor3f(0.0f+i, 0.0f+i, 0.0f+i);
+			glColor3f(0.1f*1, 0.1f*i, 0.1f*i);
 			glDisable(GL_CULL_FACE);
-			glTranslatef(1.0f*i, 1.0f, 1.0f);
+			glTranslatef(1.0f*i, -2f, 0.0f);
 			glBegin(GL_QUADS);
 				// FRONT
-				glVertex3f(-1.0f,  1.0f, 1.0f); // upper-left
-				glVertex3f( 1.0f,  1.0f, 1.0f); // upper-right
-				glVertex3f( 1.0f, -1.0f, 1.0f); // lower-right
-				glVertex3f(-1.0f, -1.0f, 1.0f);	// lower-left
+				glVertex3f(0.0f, 0.0f, 1.0f);
+				glVertex3f(1.0f, 0.0f, 1.0f);
+				glVertex3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(0.0f, 1.0f, 1.0f);
 				
 				// BACK
-				glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left (right seen form rotation=180)
-				glVertex3f( 1.0f,  1.0f, -1.0f);// upper-right (left seen form rotation=180)
-				glVertex3f( 1.0f, -1.0f, -1.0f);// lower-right (left seen from rotation=180)
-				glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left (right seen form rotation=180)
-				
-				// LEFT
-				glVertex3f(-1.0f,  1.0f, -1.0f);// upper-left
-				glVertex3f(-1.0f,  1.0f,  1.0f);// upper-right
-				glVertex3f(-1.0f, -1.0f,  1.0f);// lower-right
-				glVertex3f(-1.0f, -1.0f, -1.0f);// lower-left
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(1.0f, 0.0f, 0.0f);
+				glVertex3f(1.0f, 1.0f, 0.0f);
+				glVertex3f(0.0f, 1.0f, 0.0f);
 				
 				// RIGHT
-				glVertex3f(1.0f,  1.0f,  1.0f); // upper-left
-				glVertex3f(1.0f,  1.0f, -1.0f);	// upper-right
-				glVertex3f(1.0f, -1.0f, -1.0f);	// lower-right
-				glVertex3f(1.0f, -1.0f,  1.0f); // lower-left
+				glVertex3f(1.0f, 0.0f, 0.0f);
+				glVertex3f(1.0f, 0.0f, 1.0f);
+				glVertex3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(1.0f, 1.0f, 0.0f);
 				
-				// TOP
-				glVertex3f(-1.0f, 1.0f, -1.0f);	// upper-left
-				glVertex3f( 1.0f, 1.0f, -1.0f); // upper-right
-				glVertex3f( 1.0f, 1.0f,  1.0f); // lower-right
-				glVertex3f(-1.0f, 1.0f,  1.0f); // lower-left
-				
-				// BOTTUM
-				glVertex3f(-1.0f, -1.0f, -1.0f);// upper-left
-				glVertex3f( 1.0f, -1.0f, -1.0f);// upper-right
-				glVertex3f( 1.0f, -1.0f,  1.0f);// lower-right
-				glVertex3f(-1.0f, -1.0f,  1.0f);// lower-left
+				// LEFT
+				glVertex3f(0.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, 1.0f, 0.0f);
+				glVertex3f(0.0f, 1.0f, 1.0f);
 			glEnd();
+			glColor3f(1.0f, 1.0f, 1.0f);	
 			glPopMatrix();
 			glEndList();
 			lists.put(i);
