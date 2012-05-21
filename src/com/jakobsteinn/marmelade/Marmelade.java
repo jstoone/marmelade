@@ -22,10 +22,16 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 /**
- * Uses the Phong lighting model to display a tasty chocolate bunny.
- * @author Oskar Veerhoek
- */
+* A LWJGL port of the awesome MineFront Pre-ALPHA 0.02 Controls: W/UP =
+* forward; A/LEFT = strafe left; D/RIGHT = strafe right; S/DOWN = backward;
+* SPACE = fly up; SHIFT = fly down;
+*
+* @author Oskar Veerhoek, Yan Chernikov, Jakob Steinn
+*/
 public class Marmelade {
+	
+	private static int boxDispalyLists;
+	
 	public static void main(String[] args) {
 		try {
 			Display.setDisplayMode(new DisplayMode(1024, 768));
@@ -49,7 +55,7 @@ public class Marmelade {
 		// do shapes
 		level = new Level();
 		sphere = new Sphere();
-		box = new Box();
+		box = new Block();
 		
 		
 		// draw the textures
@@ -65,48 +71,19 @@ public class Marmelade {
 		floorDisplayList = glGenLists(1);
 		level.drawFloor(floorDisplayList);
 		
-		int size = 10;
+		int size = 100;
+		float radius = 60;
+		boxDispalyLists = glGenLists(size);
 		IntBuffer lists = BufferUtils.createIntBuffer(size);
-		sphereObjList = glGenLists(size);
+		
 		
 		for(int i = 0; i < size; i++){
-			glNewList(sphereObjList+i, GL_COMPILE);
-			glPushMatrix();
-			glColor3f(0.1f*1, 0.1f*i, 0.1f*i);
-			glDisable(GL_CULL_FACE);
-			glTranslatef(1.0f*i, -2f, 0.0f);
-			glBegin(GL_QUADS);
-				// FRONT
-				glVertex3f(0.0f, 0.0f, 1.0f);
-				glVertex3f(1.0f, 0.0f, 1.0f);
-				glVertex3f(1.0f, 1.0f, 1.0f);
-				glVertex3f(0.0f, 1.0f, 1.0f);
-				
-				// BACK
-				glVertex3f(0.0f, 0.0f, 0.0f);
-				glVertex3f(1.0f, 0.0f, 0.0f);
-				glVertex3f(1.0f, 1.0f, 0.0f);
-				glVertex3f(0.0f, 1.0f, 0.0f);
-				
-				// RIGHT
-				glVertex3f(1.0f, 0.0f, 0.0f);
-				glVertex3f(1.0f, 0.0f, 1.0f);
-				glVertex3f(1.0f, 1.0f, 1.0f);
-				glVertex3f(1.0f, 1.0f, 0.0f);
-				
-				// LEFT
-				glVertex3f(0.0f, 0.0f, 1.0f);
-				glVertex3f(0.0f, 0.0f, 0.0f);
-				glVertex3f(0.0f, 1.0f, 0.0f);
-				glVertex3f(0.0f, 1.0f, 1.0f);
-			glEnd();
-			glColor3f(1.0f, 1.0f, 1.0f);	
-			glPopMatrix();
-			glEndList();
+			float degInRad = (float) Math.toRadians(i);
+			box.draw(boxDispalyLists+i, (float) (Math.sin(degInRad * radius)), .5f*i, (float) (Math.sin(degInRad * radius)), 0.01f*i, 0.1f, 0.1f);
 			lists.put(i);
 		}
 		lists.flip();
-		
+
 		
 		while (running && !Display.isCloseRequested()) {
 			glLoadIdentity();
@@ -119,17 +96,17 @@ public class Marmelade {
 			
 			glUniform1f(diffuseModifierUniform, 1.5f);
 			
-			glCallList(ceilingDisplayList);
+			//glCallList(ceilingDisplayList);
 			glCallList(wallDisplayList);
 			glCallList(floorDisplayList);
 			
-			glListBase(sphereObjList);
+			glListBase(boxDispalyLists);
 			glCallLists(lists);
 			
 			glUseProgram(0);
 
 			cam.processMouse(1, 80, -80);
-			cam.processKeyboard(16, 0.003f, 0.003f, 0.003f);
+			cam.processKeyboard(16, 0.01f, 0.01f, 0.01f);
 
 			if (Mouse.isButtonDown(0))
 				Mouse.setGrabbed(true);
@@ -154,7 +131,7 @@ public class Marmelade {
 	private static void setUpTextures(int texture) {
 		InputStream in = null;
         try {
-            in = new FileInputStream("res/floorDefault.png");
+            in = new FileInputStream("res/floorBlueGray.png");
             PNGDecoder decoder = new PNGDecoder(in);
             ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
             decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
@@ -196,7 +173,7 @@ public class Marmelade {
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT, GL_DIFFUSE);
 	}
-
+	
 	private static void setUpShaders() {
 		shaderProgram = ShaderLoader.loadShaderPair(VERTEX_SHADER_LOCATION, FRAGMENT_SHADER_LOCATION);
 		diffuseModifierUniform = glGetUniformLocation(shaderProgram, "diffuseIntensityModifier");

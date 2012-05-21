@@ -1,22 +1,6 @@
 package com.jakobsteinn.marmelade.shapes;
 
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glNewList;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -98,6 +82,7 @@ public class Level {
 		        glTexCoord2f(0, gridSize * 10 * tileSize);
 		        glVertex3f(+gridSize, floorHeight, +gridSize);
 	        glEnd();
+	        glColor3f(1.0f, 1.0f, 1.0f);
         glEndList();
 	}
 	
@@ -113,6 +98,7 @@ public class Level {
 		        glTexCoord2f(gridSize * 10 * tileSize, 0);
 		        glVertex3f(gridSize, floorHeight, -gridSize);
 		    glEnd();
+		    glColor3f(1.0f, 1.0f, 1.0f);
 		glEndList();
 	}
 	
@@ -128,6 +114,7 @@ public class Level {
 		        glTexCoord2f(0, gridSize * 10 * tileSize);
 		        glVertex3f(-gridSize, ceilingHeight, gridSize);
 	        glEnd();
+	        glColor3f(1.0f, 1.0f, 1.0f);
 	    glEndList();
 	}
 	

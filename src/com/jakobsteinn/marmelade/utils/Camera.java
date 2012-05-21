@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 
 import com.jakobsteinn.marmelade.World;
+import com.jakobsteinn.marmelade.shapes.Level;
 import com.jakobsteinn.marmelade.shapes.Sphere;
 
 import static com.jakobsteinn.marmelade.World.*;
@@ -29,7 +30,7 @@ public class Camera {
     protected float fov = 90;
     protected float aspectRatio;
     protected float zNear = 0.3f;
-    protected float zFar = 100f;
+    protected float zFar = 1000f;
 
     public Camera(float aspectRatio) {
         this.aspectRatio = aspectRatio;
@@ -130,12 +131,10 @@ public class Camera {
         	moveFromLook(speedX * delta, 0, 0);
         }
         if (flyUp && !flyDown) {
-        	if(getY() < 10){
-        		y += speedY * delta;
-        	}
+        	y += speedY * delta;
 		}
 		if (flyDown && !flyUp) {
-			if(getY() > 0){
+			if(getY() > -0.05){
 				y -= speedY * delta;
 			}
 		}
