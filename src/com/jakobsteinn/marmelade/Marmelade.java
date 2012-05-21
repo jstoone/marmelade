@@ -33,17 +33,6 @@ public class Marmelade {
 	private static int boxDispalyLists;
 	
 	public static void main(String[] args) {
-		try {
-			Display.setDisplayMode(new DisplayMode(1024, 768));
-			Display.setVSyncEnabled(true);
-			Display.setTitle("Marmelade dev-0.4");
-			Display.create();
-		} catch (LWJGLException e) {
-			System.err.println("The display wasn't initialized correctly. :(");
-			Display.destroy();
-			System.exit(1);
-		}
-
 		Camera cam = new Camera((float) Display.getWidth()
 				/ (float) Display.getHeight(), 0.0f, 0.0f, 0.0f);
 		cam.setFov(60);
