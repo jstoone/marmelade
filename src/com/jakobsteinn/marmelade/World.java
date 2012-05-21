@@ -12,7 +12,7 @@ public class World {
 	public static int shaderProgram, diffuseModifierUniform;
 	
 	// display lists
-	public static int wallDisplayList, floorDisplayList, ceilingDisplayList, sphereObjList, textureDisplayList;
+	public static int wallDisplayList, floorDisplayList, ceilingDisplayList, textureDisplayList;
 	
 	// file locations
 	public static final File MODEL_LOCATION = new File("res/stanford-bunny.model");
