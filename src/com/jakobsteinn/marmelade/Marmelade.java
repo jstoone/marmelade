@@ -14,6 +14,6 @@ public class Marmelade {
 	private static int boxDispalyLists;
 	
 	public static void main(String[] args) {
-		new Launcher();
+		new Launcher(0);
 	}
 }
