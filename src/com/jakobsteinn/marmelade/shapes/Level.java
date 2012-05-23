@@ -1,6 +1,6 @@
 package com.jakobsteinn.marmelade.shapes;
 
-import static com.jakobsteinn.marmelade.World.textureDisplayList;
+import static com.jakobsteinn.marmelade.World.levelTextureDisplayList;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.FileInputStream;
@@ -17,8 +17,9 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public class Level {
 	/*
-	 * ***********************************************
-	 * ****** BOX ******* ***********************************************
+	 * ****************************************
+	 * ***************** BOX ******************
+	 * ****************************************
 	 */
 	// The width and length of the floor and ceiling. Don't put anything above
 	// 1000, or OpenGL will start to freak out, though.
@@ -38,8 +39,10 @@ public class Level {
 	// The height of the floor.
 	// DEFAULT: -1:
 	public static final float floorHeight = -1.9f;
-
-	private void drawWall(int wallDisplayList) {
+	
+	public Level(int wallDisplayList){
+		// NORTH-SOUTH-EAST-WEST WALLS!
+		glBindTexture(GL_TEXTURE_2D, wallDisplayList);
 		glNewList(wallDisplayList, GL_COMPILE);
 		glBegin(GL_QUADS);
 		// North wall
@@ -51,7 +54,7 @@ public class Level {
 		glVertex3f(gridSize, ceilingHeight, -gridSize);
 		glTexCoord2f(gridSize * 10 * tileSize, 0);
 		glVertex3f(-gridSize, ceilingHeight, -gridSize);
-
+		
 		// West wall
 		glTexCoord2f(0, 0);
 		glVertex3f(-gridSize, floorHeight, -gridSize);
@@ -61,7 +64,7 @@ public class Level {
 		glVertex3f(-gridSize, ceilingHeight, +gridSize);
 		glTexCoord2f(0, gridSize * 10 * tileSize);
 		glVertex3f(-gridSize, floorHeight, +gridSize);
-
+		
 		// East wall
 		glTexCoord2f(0, 0);
 		glVertex3f(+gridSize, floorHeight, -gridSize);
@@ -71,7 +74,7 @@ public class Level {
 		glVertex3f(+gridSize, ceilingHeight, +gridSize);
 		glTexCoord2f(0, gridSize * 10 * tileSize);
 		glVertex3f(+gridSize, ceilingHeight, -gridSize);
-
+		
 		// South wall
 		glTexCoord2f(0, 0);
 		glVertex3f(-gridSize, floorHeight, +gridSize);
@@ -82,12 +85,9 @@ public class Level {
 		glTexCoord2f(0, gridSize * 10 * tileSize);
 		glVertex3f(+gridSize, floorHeight, +gridSize);
 		glEnd();
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glEndList();
-	}
-
-	private void drawFloor(int floorDisplayList) {
-		glNewList(floorDisplayList, GL_COMPILE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		// FLOOR!
 		glBegin(GL_QUADS);
 		glTexCoord2f(0, 0);
 		glVertex3f(-gridSize, floorHeight, -gridSize);
@@ -98,12 +98,9 @@ public class Level {
 		glTexCoord2f(gridSize * 10 * tileSize, 0);
 		glVertex3f(gridSize, floorHeight, -gridSize);
 		glEnd();
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glEndList();
-	}
-
-	private void drawCeiling(int ceilingDisplayList) {
-		glNewList(ceilingDisplayList, GL_COMPILE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		// CEILING!
 		glBegin(GL_QUADS);
 		glTexCoord2f(0, 0);
 		glVertex3f(-gridSize, ceilingHeight, -gridSize);
@@ -114,17 +111,9 @@ public class Level {
 		glTexCoord2f(0, gridSize * 10 * tileSize);
 		glVertex3f(-gridSize, ceilingHeight, gridSize);
 		glEnd();
-		glColor3f(1.0f, 1.0f, 1.0f);
 		glEndList();
-	}
-
-	public void drawLevelBox(int textureDisplayList, int wallDisplayList, int floorDisplayList,
-			int ceilingDisplayList) {
-		glBindTexture(GL_TEXTURE_2D, textureDisplayList);
-		drawWall(wallDisplayList);
-		drawFloor(floorDisplayList);
-		drawCeiling(ceilingDisplayList);
 		glBindTexture(GL_TEXTURE_2D, 0);
+		glColor3f(1.0f, 1.0f, 1.0f);
 	}
-
+	
 }

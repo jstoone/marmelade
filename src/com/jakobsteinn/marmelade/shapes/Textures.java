@@ -20,7 +20,7 @@ public class Textures {
 		
 	}
 	
-	public static void genBoxTextures(int floorTexture, String texture){
+	public static void genBoxTextures(int textureDisplayList, String texture){
 		InputStream in = null;
         try {
             in = new FileInputStream(texture);
@@ -29,7 +29,7 @@ public class Textures {
             decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
             buffer.flip();
             in.close();
-            glBindTexture(GL_TEXTURE_2D, floorTexture);
+            glBindTexture(GL_TEXTURE_2D, textureDisplayList);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);

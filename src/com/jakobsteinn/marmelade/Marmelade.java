@@ -48,35 +48,14 @@ public class Marmelade {
 		setUpShaders();
 		setUpLighting();
 
-		// do shapes
-		level = new Level();
-		sphere = new Sphere();
-		boxColor = new BlockColor();
-		
 		// generate the floor texture
-		Textures.genBoxTextures(textureDisplayList, FLOOR_TEXTURE);
+		Textures.genBoxTextures(levelTextureDisplayList, FLOOR_TEXTURE);
 		
-		// draw the textures
-		ceilingDisplayList = glGenLists(1);
 		wallDisplayList = glGenLists(1);
-		floorDisplayList = glGenLists(1);
 		
-		level.drawLevelBox(textureDisplayList, wallDisplayList, floorDisplayList,
-				ceilingDisplayList);
+		// new level
+		new Level(wallDisplayList);
 		
-		
-		int size = 100;
-		float radius = 60;
-		boxDisplayLists = glGenLists(size);
-		IntBuffer lists = BufferUtils.createIntBuffer(size);
-		
-		
-		for(int i = 0; i < size; i++){
-			float degInRad = (float) Math.toRadians(i);
-			boxColor.draw(boxDisplayLists+i, (float) (Math.sin(degInRad * radius)), i, (float) (Math.sin(degInRad * radius)), 0.01f*i, 0.1f, 0.1f);
-			lists.put(i);
-		}
-		lists.flip();
 		
 		while (running && !Display.isCloseRequested()) {
 			glLoadIdentity();
@@ -85,16 +64,8 @@ public class Marmelade {
 			cam.applyModelviewMatrix(true);
 			
 			glUseProgram(shaderProgram);
-			
-			glUniform1f(diffuseModifierUniform, 1.5f);
-			
-			//glCallList(ceilingDisplayList);
+			glUniform1f(diffuseModifierUniform, 0.5f);
 			glCallList(wallDisplayList);
-			glCallList(floorDisplayList);
-			
-			glListBase(boxDisplayLists);
-			glCallLists(lists);
-			
 			glUseProgram(0);
 
 			cam.processMouse(1, 80, -80);
@@ -110,10 +81,7 @@ public class Marmelade {
 			//System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
 		}
 		glDeleteProgram(shaderProgram);
-		glDeleteLists(ceilingDisplayList, 1);
 		glDeleteLists(wallDisplayList, 1);
-		glDeleteLists(floorDisplayList, 1);
-		glDeleteLists(boxDisplayLists, size);
 		
 		Display.destroy();
 		System.exit(0);
