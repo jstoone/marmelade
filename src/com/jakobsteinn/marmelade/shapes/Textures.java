@@ -1,4 +1,4 @@
-package com.jakobsteinn.marmelade.old;
+package com.jakobsteinn.marmelade.shapes;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -20,10 +20,10 @@ public class Textures {
 		
 	}
 	
-	public static void genBoxTextures(int floorTexture){
+	public static void genBoxTextures(int floorTexture, String texture){
 		InputStream in = null;
         try {
-            in = new FileInputStream("res/floor.png");
+            in = new FileInputStream(texture);
             PNGDecoder decoder = new PNGDecoder(in);
             ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
             decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
@@ -39,6 +39,10 @@ public class Textures {
             Display.destroy();
             System.exit(1);
         } catch (IOException ex) {
+            System.err.println("Failed to load the texture files.");
+            Display.destroy();
+            System.exit(1);
+        } catch (NullPointerException ex) {
             System.err.println("Failed to load the texture files.");
             Display.destroy();
             System.exit(1);

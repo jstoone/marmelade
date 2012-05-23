@@ -16,6 +16,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 
+import static com.jakobsteinn.marmelade.World.*;
 import com.jakobsteinn.marmelade.shapes.*;
 
 /**
@@ -156,6 +157,7 @@ public class MarmeladeOld {
         private static Pyramid pyramid;
         private static Level level;
         private static Model3D model3D;
+        private static Textures texture;
 
 		
 	/*
@@ -221,7 +223,7 @@ public class MarmeladeOld {
 
         // generate the texture for the floor, walls and ceiling
         int floorTexture = glGenTextures();
-        level.genTextures(floorTexture);
+        texture.genBoxTextures(floorTexture, FLOOR_TEXTURE);
         
         // draw the ceiling
         int ceilingDisplayList = glGenLists(1);

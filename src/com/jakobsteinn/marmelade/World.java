@@ -16,6 +16,7 @@ public class World {
 	
 	// file locations
 	public static final File MODEL_LOCATION = new File("res/stanford-bunny.model");
+	public static final String FLOOR_TEXTURE = "res/floorDefault.png";
 	// shaders
 	public static final String VERTEX_SHADER_LOCATION = "res/specular_lighting.vert";
 	public static final String FRAGMENT_SHADER_LOCATION = "res/specular_lighting.frag";
