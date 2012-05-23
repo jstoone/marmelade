@@ -4,13 +4,7 @@ import static com.jakobsteinn.marmelade.World.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -20,9 +14,6 @@ import org.lwjgl.opengl.DisplayMode;
 
 import com.jakobsteinn.marmelade.shapes.*;
 import com.jakobsteinn.marmelade.utils.*;
-
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public class Marmelade {
 	
@@ -50,7 +41,6 @@ public class Marmelade {
 
 		// generate the floor texture
 		Textures.genBoxTextures(levelTextureDisplayList, FLOOR_TEXTURE);
-		
 		wallDisplayList = glGenLists(1);
 		
 		// new level
