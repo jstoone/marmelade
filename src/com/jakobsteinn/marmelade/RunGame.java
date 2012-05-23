@@ -11,8 +11,6 @@ import com.jakobsteinn.marmelade.gui.Launcher;
 */
 public class RunGame {
 	
-	private static int boxDispalyLists;
-	
 	public static void main(String[] args) {
 //		new Launcher(0);
 		new Marmelade();

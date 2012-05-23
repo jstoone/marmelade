@@ -1,10 +1,12 @@
 package com.jakobsteinn.marmelade;
 
-import static com.jakobsteinn.marmelade.World.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import javax.swing.Box;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -14,6 +16,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import com.jakobsteinn.marmelade.shapes.*;
 import com.jakobsteinn.marmelade.utils.*;
+import static com.jakobsteinn.marmelade.World.*;
 
 public class Marmelade {
 	
@@ -46,6 +49,16 @@ public class Marmelade {
 		// new level
 		new Level(wallDisplayList);
 		
+		int size = 1;
+		boxDisplayLists = glGenLists(size);
+		IntBuffer lists = BufferUtils.createIntBuffer(size);
+		
+		for (int i = 0; i < size; i++){
+			blockColor = new BlockColor(boxDisplayLists+i, 0f, -2f, 0f, 1.0f, 0.0f, 1.0f);
+			lists.put(i);
+		}
+		lists.flip();
+		
 		
 		while (running && !Display.isCloseRequested()) {
 			glLoadIdentity();
@@ -55,7 +68,11 @@ public class Marmelade {
 			
 			glUseProgram(shaderProgram);
 			glUniform1f(diffuseModifierUniform, 0.5f);
+			
 			glCallList(wallDisplayList);
+			glListBase(boxDisplayLists);
+			glCallLists(lists);
+			
 			glUseProgram(0);
 
 			cam.processMouse(1, 80, -80);
@@ -69,6 +86,7 @@ public class Marmelade {
 			Display.update();
 			Display.sync(60);
 			//System.out.println("X: " + cam.getPitch() + " Y: " + cam.getYaw() + " Z: " + cam.getRoll());
+			blockColor.setX(15f);
 		}
 		glDeleteProgram(shaderProgram);
 		glDeleteLists(wallDisplayList, 1);

@@ -1,19 +1,6 @@
 package com.jakobsteinn.marmelade.shapes;
 
-import static com.jakobsteinn.marmelade.World.levelTextureDisplayList;
 import static org.lwjgl.opengl.GL11.*;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
-
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public class Level {
 	/*
