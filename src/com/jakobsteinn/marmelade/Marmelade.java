@@ -51,7 +51,7 @@ public class Marmelade {
 		// do shapes
 		level = new Level();
 		sphere = new Sphere();
-		box = new Block();
+		boxColor = new BlockColor();
 		
 		
 		// draw the textures
@@ -75,11 +75,10 @@ public class Marmelade {
 		
 		for(int i = 0; i < size; i++){
 			float degInRad = (float) Math.toRadians(i);
-			box.draw(boxDisplayLists+i, (float) (Math.sin(degInRad * radius)), i, (float) (Math.sin(degInRad * radius)), 0.01f*i, 0.1f, 0.1f);
+			boxColor.draw(boxDisplayLists+i, (float) (Math.sin(degInRad * radius)), i, (float) (Math.sin(degInRad * radius)), 0.01f*i, 0.1f, 0.1f);
 			lists.put(i);
 		}
 		lists.flip();
-
 		
 		while (running && !Display.isCloseRequested()) {
 			glLoadIdentity();
@@ -122,31 +121,6 @@ public class Marmelade {
 		Display.destroy();
 		System.exit(0);
 		
-	}
-	private static void setUpTextures(int texture) {
-		InputStream in = null;
-		String test = "res/floorBlueGray.png";
-        try {
-            in = new FileInputStream(test);
-            PNGDecoder decoder = new PNGDecoder(in);
-            ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
-            decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
-            buffer.flip();
-            in.close();
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-            glBindTexture(GL_TEXTURE_2D, 0);
-        } catch (FileNotFoundException ex) {
-            System.err.println("Failed to find the texture files.");
-            Display.destroy();
-            System.exit(1);
-        } catch (IOException ex) {
-            System.err.println("Failed to load the texture files.");
-            Display.destroy();
-            System.exit(1);
-        }
 	}
 
 	private static FloatBuffer asFloatBuffer(float... values) {

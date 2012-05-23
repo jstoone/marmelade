@@ -2,9 +2,9 @@ package com.jakobsteinn.marmelade.shapes;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Block {
+public class BlockTex {
 	
-	public Block() {
+	public BlockTex() {
 	}
 	
 	public void draw(int boxDispalyLists, float x, float y, float z, float r, float g, float b){

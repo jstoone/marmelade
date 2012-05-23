@@ -26,7 +26,7 @@ public class World {
 	
 	public static Sphere sphere;
 	public static Level level;
-	public static Block box;
+	public static BlockColor boxColor;
 	
 	public static boolean isWIREFRAME_MODE() {
 		return WIREFRAME_MODE;
