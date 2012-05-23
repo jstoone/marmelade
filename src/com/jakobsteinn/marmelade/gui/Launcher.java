@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import com.jakobsteinn.marmelade.RunGame;
+import com.jakobsteinn.marmelade.Marmelade;
 
 public class Launcher extends JFrame {
 
@@ -60,7 +60,7 @@ public class Launcher extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				new RunGame();
+				new Marmelade();
 			}
 		});
 
