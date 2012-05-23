@@ -53,19 +53,17 @@ public class Marmelade {
 		sphere = new Sphere();
 		boxColor = new BlockColor();
 		
-		
-		// draw the textures
-		textureDisplayList = glGenTextures();
+		// generate the floor texture
 		Textures.genBoxTextures(textureDisplayList, FLOOR_TEXTURE);
 		
+		// draw the textures
 		ceilingDisplayList = glGenLists(1);
-		level.drawCeiling(ceilingDisplayList);
-		
 		wallDisplayList = glGenLists(1);
-		level.drawWall(wallDisplayList);
-		
 		floorDisplayList = glGenLists(1);
-		level.drawFloor(floorDisplayList);
+		
+		level.drawLevelBox(textureDisplayList, wallDisplayList, floorDisplayList,
+				ceilingDisplayList);
+		
 		
 		int size = 100;
 		float radius = 60;
@@ -83,7 +81,6 @@ public class Marmelade {
 		while (running && !Display.isCloseRequested()) {
 			glLoadIdentity();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glBindTexture(GL_TEXTURE_2D, textureDisplayList);
 
 			cam.applyModelviewMatrix(true);
 			

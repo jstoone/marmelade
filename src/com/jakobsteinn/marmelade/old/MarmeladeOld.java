@@ -223,19 +223,19 @@ public class MarmeladeOld {
 
         // generate the texture for the floor, walls and ceiling
         int floorTexture = glGenTextures();
-        texture.genBoxTextures(floorTexture, FLOOR_TEXTURE);
         
         // draw the ceiling
         int ceilingDisplayList = glGenLists(1);
-        level.drawCeiling(ceilingDisplayList);
 
         // draw the wall
         int wallDisplayList = glGenLists(1);
-        level.drawWall(wallDisplayList);
 
         // draw the floor
         int floorDisplayList = glGenLists(1);
-        level.drawFloor(floorDisplayList);
+        texture.genBoxTextures(floorTexture, FLOOR_TEXTURE);
+        
+        level.drawLevelBox(textureDisplayList, wallDisplayList, floorDisplayList,
+			ceilingDisplayList);
 
         // draw the pyramid!
         int objectDisplayList = glGenLists(1);

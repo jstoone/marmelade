@@ -1,5 +1,6 @@
 package com.jakobsteinn.marmelade.shapes;
 
+import static com.jakobsteinn.marmelade.World.textureDisplayList;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.FileInputStream;
@@ -15,107 +16,115 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public class Level {
-	/* 
+	/*
 	 * ***********************************************
-	 * ******               BOX                *******
-	 * ***********************************************
+	 * ****** BOX ******* ***********************************************
 	 */
-		//The width and length of the floor and ceiling. Don't put anything above
-		//1000, or OpenGL will start to freak out, though.
-		// floor area, watch out for the walls, the pic's get tiny
-		//DEFAULT: 10;
-		public static final int gridSize = 20;
-		
-		//The size of tiles, where 0.5 is the standard size. Increasing the size by
-		//results in smaller tiles, and vice versa.
-		//DEFAULT: 0.20f
-		public static final float tileSize = 0.20f;
-	  
-		//The height of the ceiling.
-		//DEFAULT: 10
-		public static final float ceilingHeight = gridSize;
-		
-		//The height of the floor.
-		//DEFAULT: -1:
-		public static final float floorHeight = -1.9f;
-	
-	public void drawWall(int wallDisplayList){
+	// The width and length of the floor and ceiling. Don't put anything above
+	// 1000, or OpenGL will start to freak out, though.
+	// floor area, watch out for the walls, the pic's get tiny
+	// DEFAULT: 10;
+	public static final int gridSize = 20;
+
+	// The size of tiles, where 0.5 is the standard size. Increasing the size by
+	// results in smaller tiles, and vice versa.
+	// DEFAULT: 0.20f
+	public static final float tileSize = 0.20f;
+
+	// The height of the ceiling.
+	// DEFAULT: 10
+	public static final float ceilingHeight = gridSize;
+
+	// The height of the floor.
+	// DEFAULT: -1:
+	public static final float floorHeight = -1.9f;
+
+	private void drawWall(int wallDisplayList) {
 		glNewList(wallDisplayList, GL_COMPILE);
-	        glBegin(GL_QUADS);
-		        // North wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        
-		        // West wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, floorHeight, +gridSize);
-		
-		        // East wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(+gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(+gridSize, floorHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, -gridSize);
-		
-		        // South wall
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(-gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, ceilingHeight, +gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(+gridSize, floorHeight, +gridSize);
-	        glEnd();
-	        glColor3f(1.0f, 1.0f, 1.0f);
-        glEndList();
-	}
-	
-	public void drawFloor(int floorDisplayList) {
-		glNewList(floorDisplayList, GL_COMPILE);
-        	glBegin(GL_QUADS);
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, floorHeight, -gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, floorHeight, gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, floorHeight, gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(gridSize, floorHeight, -gridSize);
-		    glEnd();
-		    glColor3f(1.0f, 1.0f, 1.0f);
+		glBegin(GL_QUADS);
+		// North wall
+		glTexCoord2f(0, 0);
+		glVertex3f(-gridSize, floorHeight, -gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(gridSize, floorHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(gridSize, ceilingHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(-gridSize, ceilingHeight, -gridSize);
+
+		// West wall
+		glTexCoord2f(0, 0);
+		glVertex3f(-gridSize, floorHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(-gridSize, ceilingHeight, +gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(-gridSize, floorHeight, +gridSize);
+
+		// East wall
+		glTexCoord2f(0, 0);
+		glVertex3f(+gridSize, floorHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(+gridSize, floorHeight, +gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(+gridSize, ceilingHeight, +gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(+gridSize, ceilingHeight, -gridSize);
+
+		// South wall
+		glTexCoord2f(0, 0);
+		glVertex3f(-gridSize, floorHeight, +gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(-gridSize, ceilingHeight, +gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(+gridSize, ceilingHeight, +gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(+gridSize, floorHeight, +gridSize);
+		glEnd();
+		glColor3f(1.0f, 1.0f, 1.0f);
 		glEndList();
 	}
-	
-	public void drawCeiling(int ceilingDisplayList) {
-		glNewList(ceilingDisplayList, GL_COMPILE);
-	        glBegin(GL_QUADS);
-		        glTexCoord2f(0, 0);
-		        glVertex3f(-gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, 0);
-		        glVertex3f(gridSize, ceilingHeight, -gridSize);
-		        glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
-		        glVertex3f(gridSize, ceilingHeight, gridSize);
-		        glTexCoord2f(0, gridSize * 10 * tileSize);
-		        glVertex3f(-gridSize, ceilingHeight, gridSize);
-	        glEnd();
-	        glColor3f(1.0f, 1.0f, 1.0f);
-	    glEndList();
+
+	private void drawFloor(int floorDisplayList) {
+		glNewList(floorDisplayList, GL_COMPILE);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex3f(-gridSize, floorHeight, -gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(-gridSize, floorHeight, gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(gridSize, floorHeight, gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(gridSize, floorHeight, -gridSize);
+		glEnd();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glEndList();
 	}
-	
+
+	private void drawCeiling(int ceilingDisplayList) {
+		glNewList(ceilingDisplayList, GL_COMPILE);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex3f(-gridSize, ceilingHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, 0);
+		glVertex3f(gridSize, ceilingHeight, -gridSize);
+		glTexCoord2f(gridSize * 10 * tileSize, gridSize * 10 * tileSize);
+		glVertex3f(gridSize, ceilingHeight, gridSize);
+		glTexCoord2f(0, gridSize * 10 * tileSize);
+		glVertex3f(-gridSize, ceilingHeight, gridSize);
+		glEnd();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glEndList();
+	}
+
+	public void drawLevelBox(int textureDisplayList, int wallDisplayList, int floorDisplayList,
+			int ceilingDisplayList) {
+		glBindTexture(GL_TEXTURE_2D, textureDisplayList);
+		drawWall(wallDisplayList);
+		drawFloor(floorDisplayList);
+		drawCeiling(ceilingDisplayList);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 }
