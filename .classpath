@@ -2,7 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="D:/Dropbox/Programmering/Jakob/jars/PNGDecoder.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lwjgl-2.8.3"/>
+	<classpathentry kind="lib" path="C:/Users/jstoon/Dropbox/Programmering/Jakob/jars/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jstoon/Dropbox/Programmering/Jakob/jars/lwjgl/jar/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/jstoon/Dropbox/Programmering/Jakob/jars/lwjgl/natives/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/jstoon/Dropbox/Programmering/Jakob/jars/lwjgl/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jstoon/Dropbox/Programmering/Jakob/jars/lwjgl/jar/slick-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
